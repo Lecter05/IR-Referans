@@ -1,0 +1,240 @@
+{
+  "name": "Windows Forensics",
+  "type": "folder",
+  "children": [
+    {
+      "name": "Mittre zinciri",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Initial Access",
+          "type": "file",
+          "slug": "initial-access",
+          "path": "Mittre zinciri/Initial Access.md"
+        },
+        {
+          "name": "Execution",
+          "type": "file",
+          "slug": "execution",
+          "path": "Mittre zinciri/Execution.md"
+        },
+        {
+          "name": "Privilege Escalation",
+          "type": "file",
+          "slug": "privilege-escalation",
+          "path": "Mittre zinciri/Privilege Escalation.md"
+        }
+      ]
+    },
+    {
+      "name": "Artifacts",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Execution",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "registry",
+              "path": "Artifacts/Execution/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "file-system",
+              "path": "Artifacts/Execution/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "event-log",
+              "path": "Artifacts/Execution/EVENT LOG.md"
+            },
+            {
+              "name": "WMI",
+              "type": "file",
+              "slug": "wmi",
+              "path": "Artifacts/Execution/WMI.md"
+            }
+          ]
+        },
+        {
+          "name": "file folder interaction",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "file-folder-interaction-registry",
+              "path": "Artifacts/file folder interaction/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "file-folder-interaction-file-system",
+              "path": "Artifacts/file folder interaction/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "file-folder-interaction-event-log",
+              "path": "Artifacts/file folder interaction/EVENT LOG.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "nadir",
+              "path": "Artifacts/file folder interaction/NADİR.md"
+            }
+          ]
+        },
+        {
+          "name": "Persistence",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "persistence-registry",
+              "path": "Artifacts/Persistence/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "persistence-file-system",
+              "path": "Artifacts/Persistence/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "persistence-event-log",
+              "path": "Artifacts/Persistence/EVENT LOG.md"
+            },
+            {
+              "name": "WMI",
+              "type": "file",
+              "slug": "persistence-wmi",
+              "path": "Artifacts/Persistence/WMI.md"
+            },
+            {
+              "name": "SCHEDULED TASKS",
+              "type": "file",
+              "slug": "scheduled-tasks",
+              "path": "Artifacts/Persistence/SCHEDULED TASKS.md"
+            },
+            {
+              "name": "SERVICES",
+              "type": "file",
+              "slug": "services",
+              "path": "Artifacts/Persistence/SERVICES.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "persistence-nadir",
+              "path": "Artifacts/Persistence/NADİR.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analiz Notları",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Memory Forensic",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Hızlı Triyaj",
+              "type": "file",
+              "slug": "hizli-triyaj",
+              "path": "Analiz Notları/Memory Forensic/Hızlı Triyaj.md"
+            },
+            {
+              "name": "Volatility 3",
+              "type": "file",
+              "slug": "volatility-3",
+              "path": "Analiz Notları/Memory Forensic/Volatility 3.md"
+            },
+            {
+              "name": "Volatility 2",
+              "type": "file",
+              "slug": "volatility-2",
+              "path": "Analiz Notları/Memory Forensic/Volatility 2.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Referans",
+      "type": "folder",
+      "children": [
+        {
+          "name": "LOLBİN",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Execution",
+              "type": "file",
+              "slug": "lolbin-execution",
+              "path": "Referans/LOLBİN/Execution.md"
+            },
+            {
+              "name": "Download",
+              "type": "file",
+              "slug": "download",
+              "path": "Referans/LOLBİN/Download.md"
+            },
+            {
+              "name": "Persistence",
+              "type": "file",
+              "slug": "persistence",
+              "path": "Referans/LOLBİN/Persistence.md"
+            },
+            {
+              "name": "UAC Bypass",
+              "type": "file",
+              "slug": "uac-bypass",
+              "path": "Referans/LOLBİN/UAC Bypass.md"
+            },
+            {
+              "name": "Defense Evasion",
+              "type": "file",
+              "slug": "defense-evasion",
+              "path": "Referans/LOLBİN/Defense Evasion.md"
+            },
+            {
+              "name": "Credential Access",
+              "type": "file",
+              "slug": "credential-access",
+              "path": "Referans/LOLBİN/Credential Access.md"
+            },
+            {
+              "name": "Network-Discovery",
+              "type": "file",
+              "slug": "network-discovery",
+              "path": "Referans/LOLBİN/Network-Discovery.md"
+            },
+            {
+              "name": "Hızlı Referans",
+              "type": "file",
+              "slug": "hizli-referans",
+              "path": "Referans/LOLBİN/Hızlı Referans.MD"
+            }
+          ]
+        },
+        {
+          "name": "Hive Artifacts Lokasyon",
+          "type": "file",
+          "slug": "hive-artifacts-lokasyon",
+          "path": "Referans/Hive Artifacts Lokasyon.md"
+        }
+      ]
+    }
+  ]
+}
