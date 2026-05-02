@@ -333,6 +333,12 @@
               "type": "file",
               "slug": "system-os-registry",
               "path": "Artifacts/System-OS/REGISTRY.md"
+            },
+            {
+              "name": "VIRTUAL MACHINE",
+              "type": "file",
+              "slug": "virtual-machine",
+              "path": "Artifacts/System-OS/VIRTUAL MACHINE.md"
             }
           ]
         }
