@@ -317,6 +317,12 @@
               "path": "Artifacts/System-OS/FILE SYSTEM.md"
             },
             {
+              "name": "GROUP POLICY",
+              "type": "file",
+              "slug": "group-policy",
+              "path": "Artifacts/System-OS/GROUP POLICY.md"
+            },
+            {
               "name": "REGISTRY",
               "type": "file",
               "slug": "system-os-registry",
