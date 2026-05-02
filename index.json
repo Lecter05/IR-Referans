@@ -257,6 +257,12 @@
               "path": "Artifacts/Accounts & Auth/CREDENTIAL MANAGER.md"
             },
             {
+              "name": "DOMAIN",
+              "type": "file",
+              "slug": "domain",
+              "path": "Artifacts/Accounts & Auth/DOMAIN.md"
+            },
+            {
               "name": "EVENT LOG",
               "type": "file",
               "slug": "accounts-auth-event-log",
