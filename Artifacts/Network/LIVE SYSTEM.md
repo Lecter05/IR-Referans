@@ -1,4 +1,3 @@
----
 
 > **Not:** "Erişim: Live System" yalnızca canlı sistem erişimi gerektiren volatile verilerde belirtilmiştir. belirtilmeyenler hem canlı sistemden hem disk imajından erişilebilir.  
 
