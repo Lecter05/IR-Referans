@@ -177,6 +177,12 @@
               "type": "file",
               "slug": "timestamp-manipulation",
               "path": "Artifacts/Deletion & Anti-Forensics/TIMESTAMP MANIPULATION.md"
+            },
+            {
+              "name": "LOG CLEAR",
+              "type": "file",
+              "slug": "log-clear",
+              "path": "Artifacts/Deletion & Anti-Forensics/LOG CLEAR.md"
             }
           ]
         }

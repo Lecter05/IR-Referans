@@ -1,6 +1,6 @@
 {
   "rootName": "Windows Forensics",
-  "count": 36,
+  "count": 37,
   "items": [
     {
       "name": "Initial Access",
@@ -169,6 +169,13 @@
       "path": "Artifacts/Deletion & Anti-Forensics/TIMESTAMP MANIPULATION.md",
       "folder": "Artifacts/Deletion & Anti-Forensics",
       "content": "1. $MFT Zaman Damgası Tutarsızlığı ($STANDARDINFORMATION vs $FILENAME) Öncelik: Yüksek Konum → $MFT → her dosya kaydının $SI ve $FN attribute'ları MITRE: T1070.006 Gözlem Notu: $STANDARDINFORMATION zaman damgasının $FILENAME'den eski olması timestomping göstergesidir; $FN kullanıcı tarafından değiştirilemez. 2. $UsnJrnl ile Timestamp Karşılaştırma Öncelik: Yüksek Konum → $UsnJrnl:$J kayıtları ile $MFT zaman damgaları MITRE: T1070.006 Gözlem Notu: USN journal'daki oluşturma zamanı ile $MFT'deki created time arasındaki tutarsızlığa bakılır. 3. Timestomp Araçları İzleri Öncelik: Yüksek Konum → Prefetch (timestomp.pf, nircmd.pf, powershell.pf); Amcache; $UsnJrnl MITRE: T1070.006 Gözlem Notu: Bilinen timestomping araçlarının (timestomp, NirCmd, Set-ItemProperty) çalıştırılma izlerine bakılır. 4. $LogFile ile Timestamp Doğrulama Öncelik: Orta Konum → C:\\$LogFile MITRE: T1070.006 Gözlem Notu: NTFS transaction logundaki operasyon zamanları ile dosya zaman damgaları arasındaki uyumsuzluğa bakılır. 5. Nanosaniye Hassasiyet Anomalisi Öncelik: Orta Konum → $MFT → $STANDARDINFORMATION zaman damgaları MITRE: T1070.006 Gözlem Notu: Nanosaniye bileşeninin tamamen sıfır olması (00:00:00.0000000) veya tüm dosyaların aynı nanosaniye değerine sahip olması durumuna bakılır. 6. Mantıksız Zaman Sıralaması Öncelik: Orta Konum → $MFT → Created, Modified, Accessed, Entry Modified zaman damgaları MITRE: T1070.006 Gözlem Notu: Bir dosyanın oluşturulma tarihinin değiştirilme tarihinden sonra olması gibi mantık dışı sıralamalara bakılır. 7. PE Header Compile Time ile Dosya Sistemi Uyumsuzluğu Öncelik: Orta Konum → PE dosyalarının TimeDateStamp alanı ile $MFT zaman damgası MITRE: T1070.006 Gözlem Notu: Executable'ın compile timestamp'ının dosya oluşturma zamanından çok farklı olup olmadığına bakılır."
+    },
+    {
+      "name": "LOG CLEAR",
+      "slug": "log-clear",
+      "path": "Artifacts/Deletion & Anti-Forensics/LOG CLEAR.md",
+      "folder": "Artifacts/Deletion & Anti-Forensics",
+      "content": "1. wevtutil.exe Çalışma İzleri Öncelik: Yüksek Konum → Prefetch → wevtutil.pf; Amcache; $UsnJrnl; BAM/DAM MITRE: T1070.001 Gözlem Notu: wevtutil.exe'nin Prefetch kaydının varlığına ve çalıştırılma zamanına bakılır. 2. PowerShell Clear-EventLog / wevtutil Komutları Öncelik: Yüksek Konum → PowerShell Operational Log → EID 4104; ConsoleHosthistory.txt MITRE: T1070.001 Gözlem Notu: Clear-EventLog veya wevtutil cl komutlarının PowerShell script block loglarında kaydına bakılır. 3. IIS / Web Sunucu Log Temizleme Öncelik: Orta Konum → C:\\inetpub\\logs\\LogFiles\\W3SVC\\.log MITRE: T1070.001 Gözlem Notu: IIS log dosyalarının silinip silinmediğine veya belirli satırların düzenlenip düzenlenmediğine bakılır. 4. RDP Bağlantı Log Temizleme Öncelik: Orta Konum → Microsoft-Windows-TerminalServices-LocalSessionManager%4Operational.evtx ve Microsoft-Windows-TerminalServices-RDPClient%4Operational.evtx MITRE: T1070.001 Gözlem Notu: RDP oturum loglarının temizlenip temizlenmediğine veya zaman boşluklarına bakılır. 5. Scheduled Task Log Aracılığıyla Otomatik Temizleme Öncelik: Orta Konum → C:\\Windows\\System32\\Tasks\\ içinde log temizleme görevi; TaskScheduler Operational → EID 106 MITRE: T1070.001 Gözlem Notu: Periyodik log temizleme için oluşturulmuş zamanlanmış görevlere bakılır. 6. Phantom Log Deletion (Thread Killing) Öncelik: Düşük Erişim: Live System Konum → Sysmon → EID 1, 10 (lsass.exe erişimi); ETW session kayıtları MITRE: T1070.001 Gözlem Notu: Event Log servisinin thread'lerinin durdurularak log yazımının engellenip engellenmediğine bakılır."
     },
     {
       "name": "Hızlı Triyaj",
