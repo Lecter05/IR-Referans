@@ -159,6 +159,12 @@
               "type": "file",
               "slug": "deletion-anti-forensics-event-log",
               "path": "Artifacts/Deletion & Anti-Forensics/EVENT LOG.md"
+            },
+            {
+              "name": "VOLUME SHADOW COPY",
+              "type": "file",
+              "slug": "volume-shadow-copy",
+              "path": "Artifacts/Deletion & Anti-Forensics/VOLUME SHADOW COPY.MD"
             }
           ]
         }
