@@ -269,6 +269,12 @@
               "path": "Artifacts/Accounts & Auth/FILE SYSTEM.md"
             },
             {
+              "name": "KERBEROS & NTLM",
+              "type": "file",
+              "slug": "kerberos-ntlm",
+              "path": "Artifacts/Accounts & Auth/KERBEROS & NTLM.md"
+            },
+            {
               "name": "REGISTRY",
               "type": "file",
               "slug": "accounts-auth-registry",
