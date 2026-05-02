@@ -359,6 +359,12 @@
               "path": "Artifacts/Event Logs/SECURITY.md"
             },
             {
+              "name": "APPLICATION",
+              "type": "file",
+              "slug": "application",
+              "path": "Artifacts/Event Logs/APPLICATION.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
