@@ -299,6 +299,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "CRASH & ERROR REPORTING",
+              "type": "file",
+              "slug": "crash-error-reporting",
+              "path": "Artifacts/System-OS/CRASH & ERROR REPORTING.md"
+            },
+            {
               "name": "DEVICE & DRIVER",
               "type": "file",
               "slug": "device-driver",

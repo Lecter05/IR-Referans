@@ -1,6 +1,6 @@
 {
   "rootName": "Windows Forensics",
-  "count": 58,
+  "count": 59,
   "items": [
     {
       "name": "Initial Access",
@@ -288,6 +288,13 @@
       "path": "Artifacts/Accounts & Auth/SAM & LSA.md",
       "folder": "Artifacts/Accounts & Auth",
       "content": "1. SAM Veritabanı Çevrimdışı Analizi Öncelik: Yüksek Konum → C:\\Windows\\System32\\config\\SAM (offline) MITRE: T1003.002 Gözlem Notu: SAM hive'ından yerel kullanıcı listesi, RID, son logon zamanı, parola değişim tarihi ve hesap bayrakları elde edilir. 2. SAM Hive — F ve V Değerleri Öncelik: Yüksek Konum → HKLM\\SAM\\SAM\\Domains\\Account\\Users\\ → F (hesap metadata) ve V (kullanıcı bilgisi) MITRE: T1003.002 Gözlem Notu: F değerindeki son logon, parola değişim, hesap bitiş tarihi ve V değerindeki NTLM hash offset'ine bakılır. 3. SECURITY Hive — LSA Secrets Öncelik: Yüksek Konum → HKLM\\SECURITY\\Policy\\Secrets\\ \\CurrVal ve OldVal MITRE: T1003.004 Gözlem Notu: Service account parolaları ($MACHINE.ACC, DefaultPassword, DPAPI anahtarları) gibi secret değerlerine bakılır. 4. SECURITY Hive — Cached Credentials Öncelik: Yüksek Konum → HKLM\\SECURITY\\Cache → NL$1 ... NL$10 (DCC2 hash) MITRE: T1003.005 Gözlem Notu: Domain Cached Credentials (DCC2) hash'lerinin varlığına ve sayısına bakılır. 5. LSA Protection (PPL) Durumu Öncelik: Yüksek Konum → HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa → RunAsPPL MITRE: T1003.001 Gözlem Notu: LSASS'ın Protected Process Light olarak çalışıp çalışmadığına ve bu korumanın devre dışı bırakılıp bırakılmadığına bakılır. 6. LSASS Dump (WER / Silinmiş Dosya) Öncelik: Yüksek Konum → C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportQueue\\\\lsass.exe.dmp ve $MFT'de lsass.dmp kalıntıları MITRE: T1003.001 Gözlem Notu: Windows Error Reporting aracılığıyla LSASS crash dump alınıp alınmadığına veya silinmiş dump kalıntılarına bakılır. 7. LSASS Dump via Silent Process Exit Öncelik: Yüksek Konum → HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SilentProcessExit\\lsass.exe → MonitorProcess ve HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\lsass.exe → GlobalFlag MITRE: T1003.001 Gözlem Notu: SilentProcessExit mekanizmasının LSASS dump almak için konfigüre edilip edilmediğine bakılır."
+    },
+    {
+      "name": "CRASH & ERROR REPORTING",
+      "slug": "crash-error-reporting",
+      "path": "Artifacts/System-OS/CRASH & ERROR REPORTING.md",
+      "folder": "Artifacts/System-OS",
+      "content": "1. BSOD Memory Dump (Full) Öncelik: Yüksek Konum → C:\\Windows\\MEMORY.DMP Gözlem Notu: Mavi ekran sırasındaki tüm fiziksel bellek dökümüdür; rootkit veya kernel exploit analizi için kullanılır. 2. BSOD Minidump Öncelik: Yüksek Konum → C:\\Windows\\Minidump\\.dmp Gözlem Notu: Her mavi ekran olayı için oluşturulan küçük döküm dosyasıdır; hata kodu, sürücü ve stack trace bilgisini içerir. 3. WER ReportQueue Öncelik: Orta Konum → C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportQueue\\ Gözlem Notu: Henüz Microsoft'a gönderilmemiş bekleyen hata raporlarının detaylı dosyalarını (Report.wer, minidump) içerir. 4. WER ReportArchive Öncelik: Orta Konum → C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\ Gözlem Notu: Gönderilmiş veya arşivlenmiş hata raporlarını saklar; geçmişe dönük crash analizi için kullanılır. 5. Application Crash Dump Öncelik: Orta Konum → C:\\Users\\ \\AppData\\Local\\CrashDumps\\ Gözlem Notu: WerFault tarafından oluşturulan uygulama düzeyinde döküm dosyalarıdır; exploit denemesine dair kanıt içerebilir. 6. LiveKernelReports Öncelik: Orta Konum → C:\\Windows\\LiveKernelReports\\ Gözlem Notu: BSOD'ye yol açmadan oluşan kernel hata raporlarını içerir; sürücü sorunlarını ve kısmi kernel çökmelerini kaydeder. 7. Kullanıcı WER Raporları Öncelik: Düşük Konum → C:\\Users\\ \\AppData\\Local\\Microsoft\\Windows\\WER\\ Gözlem Notu: Kullanıcı bağlamında oluşan uygulama crash raporlarını ve hataya neden olan modül bilgisini içerir. 8. Reliability Monitor Verileri Öncelik: Düşük Konum → C:\\ProgramData\\Microsoft\\RAC\\PublishedData\\ Gözlem Notu: Sistem kararlılık indeksi ve kronolojik hata geçmişi verilerini içerir."
     },
     {
       "name": "DEVICE & DRIVER",
