@@ -221,6 +221,12 @@
               "path": "Artifacts/Network/WIRELESS.md"
             },
             {
+              "name": "FIREWALL & PROXY",
+              "type": "file",
+              "slug": "firewall-proxy",
+              "path": "Artifacts/Network/FIREWALL & PROXY.md"
+            },
+            {
               "name": "BROWSER",
               "type": "file",
               "slug": "browser",
