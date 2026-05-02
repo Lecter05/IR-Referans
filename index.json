@@ -329,6 +329,12 @@
               "path": "Artifacts/System-OS/GROUP POLICY.md"
             },
             {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "system-os-nadir",
+              "path": "Artifacts/System-OS/NADİR.md"
+            },
+            {
               "name": "REGISTRY",
               "type": "file",
               "slug": "system-os-registry",
