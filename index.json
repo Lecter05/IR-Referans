@@ -347,6 +347,18 @@
               "path": "Artifacts/System-OS/NADİR.md"
             }
           ]
+        },
+        {
+          "name": "Event Logs",
+          "type": "folder",
+          "children": [
+            {
+              "name": "SECURITY",
+              "type": "file",
+              "slug": "security",
+              "path": "Artifacts/Event Logs/SECURITY.md"
+            }
+          ]
         }
       ]
     },
