@@ -213,6 +213,12 @@
               "type": "file",
               "slug": "network-event-log",
               "path": "Artifacts/Network/EVENT LOG.md"
+            },
+            {
+              "name": "BROWSER",
+              "type": "file",
+              "slug": "browser",
+              "path": "Artifacts/Network/BROWSER.md"
             }
           ]
         }
