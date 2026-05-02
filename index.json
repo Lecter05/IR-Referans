@@ -31,13 +31,25 @@
       "type": "folder",
       "children": [
         {
-          "name": "Execution",
+          "name": "Deletion & Anti-Forensics",
           "type": "folder",
           "children": [
             {
               "name": "REGISTRY",
               "type": "file",
               "slug": "registry",
+              "path": "Artifacts/Deletion & Anti-Forensics/REGISTRY.md"
+            }
+          ]
+        },
+        {
+          "name": "Execution",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "execution-registry",
               "path": "Artifacts/Execution/REGISTRY.md"
             },
             {
