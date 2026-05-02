@@ -389,6 +389,12 @@
               "path": "Artifacts/Event Logs/RDP & REMOTE ACCESS.md"
             },
             {
+              "name": "WMI",
+              "type": "file",
+              "slug": "event-logs-wmi",
+              "path": "Artifacts/Event Logs/WMI.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
