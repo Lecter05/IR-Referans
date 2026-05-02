@@ -191,6 +191,18 @@
               "path": "Artifacts/Deletion & Anti-Forensics/DİĞER.md"
             }
           ]
+        },
+        {
+          "name": "Network",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "network-registry",
+              "path": "Artifacts/Network/REGISTRY.md"
+            }
+          ]
         }
       ]
     },
