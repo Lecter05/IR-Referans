@@ -383,6 +383,12 @@
               "path": "Artifacts/Event Logs/TASK SCHEDULER.md"
             },
             {
+              "name": "RDP & REMOTE ACCESS",
+              "type": "file",
+              "slug": "rdp-remote-access",
+              "path": "Artifacts/Event Logs/RDP & REMOTE ACCESS.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
