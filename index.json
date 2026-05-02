@@ -299,6 +299,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "system-os-event-log",
+              "path": "Artifacts/System-OS/EVENT LOG.md"
+            },
+            {
               "name": "FILE SYSTEM",
               "type": "file",
               "slug": "system-os-file-system",
