@@ -377,6 +377,12 @@
               "path": "Artifacts/Event Logs/SYSMON.md"
             },
             {
+              "name": "TASK SCHEDULER",
+              "type": "file",
+              "slug": "task-scheduler",
+              "path": "Artifacts/Event Logs/TASK SCHEDULER.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
