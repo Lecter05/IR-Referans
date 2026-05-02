@@ -215,6 +215,12 @@
               "path": "Artifacts/Network/EVENT LOG.md"
             },
             {
+              "name": "WIRELESS",
+              "type": "file",
+              "slug": "wireless",
+              "path": "Artifacts/Network/WIRELESS.md"
+            },
+            {
               "name": "BROWSER",
               "type": "file",
               "slug": "browser",
