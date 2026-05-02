@@ -233,6 +233,12 @@
               "path": "Artifacts/Network/REMOTE ACCESS.md"
             },
             {
+              "name": "LIVE SYSTEM",
+              "type": "file",
+              "slug": "live-system",
+              "path": "Artifacts/Network/LIVE SYSTEM.md"
+            },
+            {
               "name": "BROWSER",
               "type": "file",
               "slug": "browser",
