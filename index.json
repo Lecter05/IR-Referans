@@ -395,6 +395,12 @@
               "path": "Artifacts/Event Logs/WMI.md"
             },
             {
+              "name": "NETWORK & FIREWALL",
+              "type": "file",
+              "slug": "network-firewall",
+              "path": "Artifacts/Event Logs/NETWORK & FIREWALL.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
