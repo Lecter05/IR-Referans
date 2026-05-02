@@ -251,6 +251,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "accounts-auth-file-system",
+              "path": "Artifacts/Accounts & Auth/FILE SYSTEM.md"
+            },
+            {
               "name": "REGISTRY",
               "type": "file",
               "slug": "accounts-auth-registry",
