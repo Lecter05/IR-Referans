@@ -147,6 +147,12 @@
               "type": "file",
               "slug": "deletion-anti-forensics-registry",
               "path": "Artifacts/Deletion & Anti-Forensics/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "deletion-anti-forensics-file-system",
+              "path": "Artifacts/Deletion & Anti-Forensics/FILE SYSTEM.md"
             }
           ]
         }
