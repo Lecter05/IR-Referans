@@ -299,6 +299,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "DEVICE & DRIVER",
+              "type": "file",
+              "slug": "device-driver",
+              "path": "Artifacts/System-OS/DEVICE & DRIVER.md"
+            },
+            {
               "name": "EVENT LOG",
               "type": "file",
               "slug": "system-os-event-log",
