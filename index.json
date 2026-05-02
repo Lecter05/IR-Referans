@@ -293,6 +293,18 @@
               "path": "Artifacts/Accounts & Auth/SAM & LSA.md"
             }
           ]
+        },
+        {
+          "name": "System-OS",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "system-os-registry",
+              "path": "Artifacts/System-OS/REGISTRY.md"
+            }
+          ]
         }
       ]
     },
