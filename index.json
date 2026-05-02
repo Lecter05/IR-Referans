@@ -401,6 +401,12 @@
               "path": "Artifacts/Event Logs/NETWORK & FIREWALL.md"
             },
             {
+              "name": "DEFENDER & APPLOCKER",
+              "type": "file",
+              "slug": "defender-applocker",
+              "path": "Artifacts/Event Logs/DEFENDER & APPLOCKER.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
