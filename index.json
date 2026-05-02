@@ -251,6 +251,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "accounts-auth-event-log",
+              "path": "Artifacts/Accounts & Auth/EVENT LOG.md"
+            },
+            {
               "name": "FILE SYSTEM",
               "type": "file",
               "slug": "accounts-auth-file-system",
