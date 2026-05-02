@@ -245,6 +245,18 @@
               "path": "Artifacts/Network/BROWSER.md"
             }
           ]
+        },
+        {
+          "name": "Accounts & Auth",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "accounts-auth-registry",
+              "path": "Artifacts/Accounts & Auth/REGISTRY.md"
+            }
+          ]
         }
       ]
     },
