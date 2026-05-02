@@ -227,6 +227,12 @@
               "path": "Artifacts/Network/FIREWALL & PROXY.md"
             },
             {
+              "name": "REMOTE ACCESS",
+              "type": "file",
+              "slug": "remote-access",
+              "path": "Artifacts/Network/REMOTE ACCESS.md"
+            },
+            {
               "name": "BROWSER",
               "type": "file",
               "slug": "browser",
