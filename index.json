@@ -251,22 +251,10 @@
           "type": "folder",
           "children": [
             {
-              "name": "CREDENTIAL MANAGER",
+              "name": "REGISTRY",
               "type": "file",
-              "slug": "credential-manager",
-              "path": "Artifacts/Accounts & Auth/CREDENTIAL MANAGER.md"
-            },
-            {
-              "name": "DOMAIN",
-              "type": "file",
-              "slug": "domain",
-              "path": "Artifacts/Accounts & Auth/DOMAIN.md"
-            },
-            {
-              "name": "EVENT LOG",
-              "type": "file",
-              "slug": "accounts-auth-event-log",
-              "path": "Artifacts/Accounts & Auth/EVENT LOG.md"
+              "slug": "accounts-auth-registry",
+              "path": "Artifacts/Accounts & Auth/REGISTRY.md"
             },
             {
               "name": "FILE SYSTEM",
@@ -275,22 +263,34 @@
               "path": "Artifacts/Accounts & Auth/FILE SYSTEM.md"
             },
             {
-              "name": "KERBEROS & NTLM",
+              "name": "EVENT LOG",
               "type": "file",
-              "slug": "kerberos-ntlm",
-              "path": "Artifacts/Accounts & Auth/KERBEROS & NTLM.md"
-            },
-            {
-              "name": "REGISTRY",
-              "type": "file",
-              "slug": "accounts-auth-registry",
-              "path": "Artifacts/Accounts & Auth/REGISTRY.md"
+              "slug": "accounts-auth-event-log",
+              "path": "Artifacts/Accounts & Auth/EVENT LOG.md"
             },
             {
               "name": "SAM & LSA",
               "type": "file",
               "slug": "sam-lsa",
               "path": "Artifacts/Accounts & Auth/SAM & LSA.md"
+            },
+            {
+              "name": "CREDENTIAL MANAGER",
+              "type": "file",
+              "slug": "credential-manager",
+              "path": "Artifacts/Accounts & Auth/CREDENTIAL MANAGER.md"
+            },
+            {
+              "name": "KERBEROS & NTLM",
+              "type": "file",
+              "slug": "kerberos-ntlm",
+              "path": "Artifacts/Accounts & Auth/KERBEROS & NTLM.md"
+            },
+            {
+              "name": "DOMAIN",
+              "type": "file",
+              "slug": "domain",
+              "path": "Artifacts/Accounts & Auth/DOMAIN.md"
             }
           ]
         },
