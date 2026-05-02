@@ -299,6 +299,12 @@
           "type": "folder",
           "children": [
             {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "system-os-file-system",
+              "path": "Artifacts/System-OS/FILE SYSTEM.md"
+            },
+            {
               "name": "REGISTRY",
               "type": "file",
               "slug": "system-os-registry",
