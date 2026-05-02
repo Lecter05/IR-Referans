@@ -183,6 +183,12 @@
               "type": "file",
               "slug": "log-clear",
               "path": "Artifacts/Deletion & Anti-Forensics/LOG CLEAR.md"
+            },
+            {
+              "name": "DİĞER",
+              "type": "file",
+              "slug": "diger",
+              "path": "Artifacts/Deletion & Anti-Forensics/DİĞER.md"
             }
           ]
         }
