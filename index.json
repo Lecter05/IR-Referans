@@ -371,6 +371,12 @@
               "path": "Artifacts/Event Logs/POWERSHELL.md"
             },
             {
+              "name": "SYSMON",
+              "type": "file",
+              "slug": "sysmon",
+              "path": "Artifacts/Event Logs/SYSMON.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
