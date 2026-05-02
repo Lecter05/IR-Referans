@@ -165,6 +165,12 @@
               "type": "file",
               "slug": "volume-shadow-copy",
               "path": "Artifacts/Deletion & Anti-Forensics/VOLUME SHADOW COPY.MD"
+            },
+            {
+              "name": "RECYCLE BIN",
+              "type": "file",
+              "slug": "recycle-bin",
+              "path": "Artifacts/Deletion & Anti-Forensics/RECYCLE BIN.md"
             }
           ]
         }
