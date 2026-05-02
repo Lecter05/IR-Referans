@@ -267,6 +267,12 @@
               "type": "file",
               "slug": "accounts-auth-registry",
               "path": "Artifacts/Accounts & Auth/REGISTRY.md"
+            },
+            {
+              "name": "SAM & LSA",
+              "type": "file",
+              "slug": "sam-lsa",
+              "path": "Artifacts/Accounts & Auth/SAM & LSA.md"
             }
           ]
         }
