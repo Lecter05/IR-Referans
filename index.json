@@ -201,6 +201,12 @@
               "type": "file",
               "slug": "network-registry",
               "path": "Artifacts/Network/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "network-file-system",
+              "path": "Artifacts/Network/FILE SYSTEM.md"
             }
           ]
         }
