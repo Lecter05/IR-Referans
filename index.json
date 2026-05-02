@@ -299,22 +299,10 @@
           "type": "folder",
           "children": [
             {
-              "name": "CRASH & ERROR REPORTING",
+              "name": "REGISTRY",
               "type": "file",
-              "slug": "crash-error-reporting",
-              "path": "Artifacts/System-OS/CRASH & ERROR REPORTING.md"
-            },
-            {
-              "name": "DEVICE & DRIVER",
-              "type": "file",
-              "slug": "device-driver",
-              "path": "Artifacts/System-OS/DEVICE & DRIVER.md"
-            },
-            {
-              "name": "EVENT LOG",
-              "type": "file",
-              "slug": "system-os-event-log",
-              "path": "Artifacts/System-OS/EVENT LOG.md"
+              "slug": "system-os-registry",
+              "path": "Artifacts/System-OS/REGISTRY.md"
             },
             {
               "name": "FILE SYSTEM",
@@ -323,28 +311,40 @@
               "path": "Artifacts/System-OS/FILE SYSTEM.md"
             },
             {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "system-os-event-log",
+              "path": "Artifacts/System-OS/EVENT LOG.md"
+            },
+            {
+              "name": "DEVICE & DRIVER",
+              "type": "file",
+              "slug": "device-driver",
+              "path": "Artifacts/System-OS/DEVICE & DRIVER.md"
+            },
+            {
               "name": "GROUP POLICY",
               "type": "file",
               "slug": "group-policy",
               "path": "Artifacts/System-OS/GROUP POLICY.md"
             },
             {
-              "name": "NADİR",
+              "name": "CRASH & ERROR REPORTING",
               "type": "file",
-              "slug": "system-os-nadir",
-              "path": "Artifacts/System-OS/NADİR.md"
-            },
-            {
-              "name": "REGISTRY",
-              "type": "file",
-              "slug": "system-os-registry",
-              "path": "Artifacts/System-OS/REGISTRY.md"
+              "slug": "crash-error-reporting",
+              "path": "Artifacts/System-OS/CRASH & ERROR REPORTING.md"
             },
             {
               "name": "VIRTUAL MACHINE",
               "type": "file",
               "slug": "virtual-machine",
               "path": "Artifacts/System-OS/VIRTUAL MACHINE.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "system-os-nadir",
+              "path": "Artifacts/System-OS/NADİR.md"
             }
           ]
         }
