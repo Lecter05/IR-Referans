@@ -407,6 +407,12 @@
               "path": "Artifacts/Event Logs/DEFENDER & APPLOCKER.md"
             },
             {
+              "name": "DİĞER",
+              "type": "file",
+              "slug": "event-logs-diger",
+              "path": "Artifacts/Event Logs/DİĞER.md"
+            },
+            {
               "name": "SYSTEM",
               "type": "file",
               "slug": "system",
