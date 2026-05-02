@@ -153,6 +153,12 @@
               "type": "file",
               "slug": "deletion-anti-forensics-file-system",
               "path": "Artifacts/Deletion & Anti-Forensics/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "deletion-anti-forensics-event-log",
+              "path": "Artifacts/Deletion & Anti-Forensics/EVENT LOG.md"
             }
           ]
         }
