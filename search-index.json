@@ -1,6 +1,6 @@
 {
   "rootName": "Windows Forensics",
-  "count": 35,
+  "count": 36,
   "items": [
     {
       "name": "Initial Access",
@@ -162,6 +162,13 @@
       "path": "Artifacts/Deletion & Anti-Forensics/RECYCLE BIN.md",
       "folder": "Artifacts/Deletion & Anti-Forensics",
       "content": "1. $Recycle.Bin Metadata ($I ve $R Dosyaları) Öncelik: Yüksek Konum → C:\\$Recycle.Bin\\ \\$I?????? ve $R?????? MITRE: T1070.004 Gözlem Notu: $I dosyalarındaki orijinal dosya adı, yol, boyut ve silme zamanı bilgilerine bakılır; $R dosyası silinmiş içeriğin kendisidir. 2. $Recycle.Bin Toplu Temizleme Öncelik: Yüksek Konum → C:\\$Recycle.Bin\\ \\ klasörü MITRE: T1070.004 Gözlem Notu: Recycle Bin'in tamamen boşaltılıp boşaltılmadığına; $I/$R dosya çiftlerinin tutarsızlığına bakılır. 3. Recycle Bin Bypass ile Silme (rd /s /q, del /f, PowerShell Remove-Item) Öncelik: Yüksek Konum → $UsnJrnl ve $MFT kayıtları; komut geçmişi MITRE: T1070.004 Gözlem Notu: Komut satırı ile Recycle Bin'e uğramadan yapılan toplu silme işlemlerinin izlerine bakılır. 4. $Recycle.Bin Dosyalarının Doğrudan Silinmesi Öncelik: Orta Konum → $MFT ve $UsnJrnl'de $Recycle.Bin altındaki silme kayıtları MITRE: T1070.004 Gözlem Notu: Recycle Bin içindeki $I/$R dosyalarının dosya sistemi düzeyinde (Recycle Bin'i atlayarak) silinip silinmediğine bakılır. 5. Farklı Hacimlerdeki Recycle Bin Öncelik: Düşük Konum → D:\\$Recycle.Bin\\, E:\\$Recycle.Bin\\ vb. MITRE: T1070.004 Gözlem Notu: Sistem dışı sürücülerdeki Recycle Bin klasörlerinin de kontrol edilip edilmediğine bakılır; sıklıkla gözden kaçar."
+    },
+    {
+      "name": "TIMESTAMP MANIPULATION",
+      "slug": "timestamp-manipulation",
+      "path": "Artifacts/Deletion & Anti-Forensics/TIMESTAMP MANIPULATION.md",
+      "folder": "Artifacts/Deletion & Anti-Forensics",
+      "content": "1. $MFT Zaman Damgası Tutarsızlığı ($STANDARDINFORMATION vs $FILENAME) Öncelik: Yüksek Konum → $MFT → her dosya kaydının $SI ve $FN attribute'ları MITRE: T1070.006 Gözlem Notu: $STANDARDINFORMATION zaman damgasının $FILENAME'den eski olması timestomping göstergesidir; $FN kullanıcı tarafından değiştirilemez. 2. $UsnJrnl ile Timestamp Karşılaştırma Öncelik: Yüksek Konum → $UsnJrnl:$J kayıtları ile $MFT zaman damgaları MITRE: T1070.006 Gözlem Notu: USN journal'daki oluşturma zamanı ile $MFT'deki created time arasındaki tutarsızlığa bakılır. 3. Timestomp Araçları İzleri Öncelik: Yüksek Konum → Prefetch (timestomp.pf, nircmd.pf, powershell.pf); Amcache; $UsnJrnl MITRE: T1070.006 Gözlem Notu: Bilinen timestomping araçlarının (timestomp, NirCmd, Set-ItemProperty) çalıştırılma izlerine bakılır. 4. $LogFile ile Timestamp Doğrulama Öncelik: Orta Konum → C:\\$LogFile MITRE: T1070.006 Gözlem Notu: NTFS transaction logundaki operasyon zamanları ile dosya zaman damgaları arasındaki uyumsuzluğa bakılır. 5. Nanosaniye Hassasiyet Anomalisi Öncelik: Orta Konum → $MFT → $STANDARDINFORMATION zaman damgaları MITRE: T1070.006 Gözlem Notu: Nanosaniye bileşeninin tamamen sıfır olması (00:00:00.0000000) veya tüm dosyaların aynı nanosaniye değerine sahip olması durumuna bakılır. 6. Mantıksız Zaman Sıralaması Öncelik: Orta Konum → $MFT → Created, Modified, Accessed, Entry Modified zaman damgaları MITRE: T1070.006 Gözlem Notu: Bir dosyanın oluşturulma tarihinin değiştirilme tarihinden sonra olması gibi mantık dışı sıralamalara bakılır. 7. PE Header Compile Time ile Dosya Sistemi Uyumsuzluğu Öncelik: Orta Konum → PE dosyalarının TimeDateStamp alanı ile $MFT zaman damgası MITRE: T1070.006 Gözlem Notu: Executable'ın compile timestamp'ının dosya oluşturma zamanından çok farklı olup olmadığına bakılır."
     },
     {
       "name": "Hızlı Triyaj",

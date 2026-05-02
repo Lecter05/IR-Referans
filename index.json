@@ -171,6 +171,12 @@
               "type": "file",
               "slug": "recycle-bin",
               "path": "Artifacts/Deletion & Anti-Forensics/RECYCLE BIN.md"
+            },
+            {
+              "name": "TIMESTAMP MANIPULATION",
+              "type": "file",
+              "slug": "timestamp-manipulation",
+              "path": "Artifacts/Deletion & Anti-Forensics/TIMESTAMP MANIPULATION.md"
             }
           ]
         }
