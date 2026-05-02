@@ -207,6 +207,12 @@
               "type": "file",
               "slug": "network-file-system",
               "path": "Artifacts/Network/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "network-event-log",
+              "path": "Artifacts/Network/EVENT LOG.md"
             }
           ]
         }
