@@ -1,4 +1,3 @@
-## 4. VOLUME SHADOW COPY ARTIFACT'LARI
 
 ```
 1. Volume Shadow Copy Silme (vssadmin delete shadows)
