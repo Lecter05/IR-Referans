@@ -161,12 +161,6 @@
               "path": "Artifacts/Deletion & Anti-Forensics/EVENT LOG.md"
             },
             {
-              "name": "VOLUME SHADOW COPY",
-              "type": "file",
-              "slug": "volume-shadow-copy",
-              "path": "Artifacts/Deletion & Anti-Forensics/VOLUME SHADOW COPY.MD"
-            },
-            {
               "name": "RECYCLE BIN",
               "type": "file",
               "slug": "recycle-bin",
@@ -189,6 +183,12 @@
               "type": "file",
               "slug": "diger",
               "path": "Artifacts/Deletion & Anti-Forensics/DİĞER.md"
+            },
+            {
+              "name": "VOLUME SHADOW COPY",
+              "type": "file",
+              "slug": "volume-shadow-copy",
+              "path": "Artifacts/Deletion & Anti-Forensics/VOLUME SHADOW COPY.md"
             }
           ]
         },
