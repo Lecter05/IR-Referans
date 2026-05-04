@@ -5,7 +5,9 @@
 ## Faz 1 — Bağlam Oluşturma
 
 ### windows.info
-
+```bash
+python3 vol.py -f dump.mem windows.info
+```
 Bellek imajının SystemTime değerinden olay zaman çizelgesinin referans noktası oluşturulur.
 
 ### windows.sessions
