@@ -34,7 +34,7 @@ sort pslist.csv > a; sort psscan.csv > b; diff a b > gizlenmis_surecler.txt
 - System, smss.exe, wininit.exe, services.exe, lsass.exe → her birinden **yalnızca bir tane** olmalı.
 
 <details>
-<summary>🔎 Duplicate core process kontrol komutu — tıkla/aç</summary>
+<summary>🔎 tıkla/aç</summary>
 
 ```bash
 python3 vol.py -q -f ../memoryexmpl/dump.mem windows.pslist 2>/dev/null \
@@ -62,12 +62,12 @@ END {
 
 </details>
 
----
 
-- İsim kamuflajı ara → svchostt.exe, Isass.exe (büyük i), scvhost.exe vb. Alttaki komutla yasal süreçleri filreleyip yasal olmayan süreçlerin ayrımı yapılabilir.
+- İsim kamuflajı ara → svchostt.exe, Isass.exe, scvhost.exe gibi benzer süreç adlarını tespit et.
+
 
 <details>
-<summary>🔎 İsim kamuflajı tespit komutu — tıkla/aç</summary>
+<summary>🔎 tıkla/aç</summary>
 
 ```bash
 python3 vol.py -q -f ../memoryexmpl/dump.mem windows.pslist 2>/dev/null | awk '
@@ -135,12 +135,11 @@ END {
 
 </details>
 
----
 
-- svchost.exe süreçlerinin PPID'si **mutlaka** services.exe olmalı. Hızlı kontrol için Komutu kopyala
+- svchost.exe süreçlerinin PPID'si **mutlaka** services.exe olmalı.
 
 <details>
-<summary>🔎 svchost.exe PPID kontrol komutu — tıkla/aç</summary>
+<summary>🔎 tıkla/aç</summary>
 
 ```bash
 python3 vol.py -q -f ../memoryexmpl/RogueProcessCase1.mem windows.pslist 2>/dev/null | awk '
