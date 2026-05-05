@@ -427,13 +427,25 @@
       "type": "folder",
       "children": [
         {
-          "name": "Memory Forensic",
+          "name": "Lateral Movement",
           "type": "folder",
           "children": [
             {
               "name": "Hızlı Triyaj",
               "type": "file",
               "slug": "hizli-triyaj",
+              "path": "Analiz Notları/Lateral Movement/Hızlı Triyaj.md"
+            }
+          ]
+        },
+        {
+          "name": "Memory Forensic",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Hızlı Triyaj",
+              "type": "file",
+              "slug": "memory-forensic-hizli-triyaj",
               "path": "Analiz Notları/Memory Forensic/Hızlı Triyaj.md"
             },
             {
