@@ -121,3 +121,19 @@ Lateral movement başarılıysa saldırgan foothold bırakır.
 
 ### Görselleştirme
 - LogonTracer
+
+
+---
+
+## Güncel Tehdit Yüzeyi (2025-2026)
+
+- **LOTL / LOLBins** — PowerShell tüm LOTL saldırılarının %71'inde; WMI, WinRM, certutil, bitsadmin, rundll32, schtasks, sc.exe, net.exe kombinasyonları omurga.
+- **RDP kötüye kullanımı** — Ransomware olaylarının %90'ında görüldü (Sophos 2024). Hâlâ #1 lateral movement vektörü.
+- **Kerberoasting** — Yıllık %100 artış (IBM X-Force 2023). Servis hesabı SPN'leri üzerinden offline cracking.
+- **NTLM relay / hash harvesting** — CVE-2025-24054: .library-ms dosyalarıyla NTLMv2 hash toplama kampanyası.
+- **Edge cihazı pivoting** — EDR'sız proprietary OS'lar birincil hedef. Packet capture ile düz metin credential toplama.
+- **Cloud identity / SSO pivot** — On-prem'den cloud'a kayış; SSO portalları, zayıf MFA, yetersiz loglama.
+- **Container lateral movement** — 2025'te %34 artış; saldırganlar cloud-native mimarilere adapte oluyor.
+- **IAB → Ransomware handoff** — FAKEUPDATES gibi downloader'lar ile 70 dk içinde interactive ransomware. Devir süresi 22 saniye.
+
+---
