@@ -2,39 +2,10 @@
 
 > **Breakout time:** 29 dakika (eCrime ortalaması, CrowdStrike 2026). En hızlı gözlenen vaka 27 saniye. Initial access → operator devir süresi 22 saniyeye düştü (Mandiant M-Trends 2026).
 
----
-
-## Güncel Tehdit Yüzeyi (2025-2026)
-
-- **LOTL / LOLBins** — PowerShell tüm LOTL saldırılarının %71'inde; WMI, WinRM, certutil, bitsadmin, rundll32, schtasks, sc.exe, net.exe kombinasyonları omurga.
-- **RDP kötüye kullanımı** — Ransomware olaylarının %90'ında görüldü (Sophos 2024). Hâlâ #1 lateral movement vektörü.
-- **Kerberoasting** — Yıllık %100 artış (IBM X-Force 2023). Servis hesabı SPN'leri üzerinden offline cracking.
-- **NTLM relay / hash harvesting** — CVE-2025-24054: .library-ms dosyalarıyla NTLMv2 hash toplama kampanyası.
-- **Edge cihazı pivoting** — EDR'sız proprietary OS'lar birincil hedef. Packet capture ile düz metin credential toplama.
-- **Cloud identity / SSO pivot** — On-prem'den cloud'a kayış; SSO portalları, zayıf MFA, yetersiz loglama.
-- **Container lateral movement** — 2025'te %34 artış; saldırganlar cloud-native mimarilere adapte oluyor.
-- **IAB → Ransomware handoff** — FAKEUPDATES gibi downloader'lar ile 70 dk içinde interactive ransomware. Devir süresi 22 saniye.
-
----
-
-## APT Hızlı Referans
-
-- **APT29** (Cozy Bear) → Pass-the-Hash, ticket forgery, supply chain → Hükümet, kurumsal
-- **APT38** (Lazarus) → RDP, SMB lateral movement → Finans (SWIFT)
-- **APT28 / APT41** → Pass-the-Hash, geniş toolset (BEACON, SQLULDR2) → Çoklu
-- **Wizard Spider** → Pass-the-Hash → Çoklu
-- **Volt Typhoon** → Edge cihazı exploitation + derin LOTL (5 yıl persistence) → Kritik altyapı
-- **Salt Typhoon** → Cihaz üzerinde packet capture → Telekom
-- **Scattered Spider** → Yardım masası social engineering, voice phishing → Sağlık, eğitim
-- **FIN7** → PowerShell backdoor, WMI persistence, Kerberoasting → Finans
-
-**Pratik kısayol:** Hedef sektörünü bilmek triyajı hızlandırır → finans: APT38/FIN7 kalıpları · kritik altyapı: Volt Typhoon (LOTL) · telekom: Salt Typhoon · sağlık/eğitim: Scattered Spider/RansomHub.
-
----
 
 ## Triyaj Akışı
 
-> Amaç: alarmı hızla "gerçek lateral movement mı, değil mi?" sorusuna cevaplamak. Sıra değişmemeli; her adım bir sonrakini odaklıyor.
+> Amaç: alarmı hızla "gerçek lateral movement mı, değil mi?" sorusuna cevaplamak. her adım bir sonrakini odaklıyor.
 
 ### Dakika 0-2 — Scope & Pivot Point Tespiti
 
@@ -110,12 +81,6 @@ Authentication teyit edildiyse → host üzerinde ne çalıştı?
 
 **5156** — WFP connection allowed (process + hedef IP/port).
 
-**Hızlı doğrulama:**
-
-```
-netstat -nao | find "ESTABLISHED"
-```
-
 ---
 
 ### Dakika 11-15 — Persistence & Yayılma Sinyali
@@ -138,7 +103,6 @@ Lateral movement başarılıysa saldırgan foothold bırakır.
 ### Artefact Toplama
 
 - **KAPE** — 60-120 sn'de canlı hosttan kritik artefact (evtx, Prefetch, Amcache, ShimCache, RDP bitmap cache, SRUM). Targets: `!BasicCollection`, `SANS_Triage`.
-- **Velociraptor** — Canlı ortamda tek komutla scale'lenen hunt.
 - **CyLR / DFIR-ORC** — Alternatifler.
 
 ### Log Parsing
@@ -150,25 +114,10 @@ Lateral movement başarılıysa saldırgan foothold bırakır.
 
 ### Bellek Analizi
 
-- **Volatility 3 / MemProcFS** — lsass üzerinde şüphe varsa → psscan, netscan, malfind, pslist.
+- **Volatility 3 / MemProcFS**
 
-### Ağ Tarafı
-
+### Ağ Tarafı  
 - **Zeek/Suricata** — `kerberos.log` içinde `etype=23 (RC4)` = Kerberoast sinyali. `smb_files.log` içinde admin share'e `.exe` yazımı.
-- **Firewall/NDR east-west** — Workstation → workstation 445/3389/5985 trafiği.
-- **NetFlow** — İlk defa konuşan host çiftleri.
 
-### Identity
-
-- **BloodHound** — Compromised hesabın Domain Admin'e kaç hop uzakta olduğunu saniyeler içinde gösterir (defansif kullanım).
-- **Azure AD / Entra ID** — SignInLogs, AuditLogs ile hibrit ortamda cloud pivot eşlemesi.
-
-### EDR Hızlı Sorgular
-
-**Defender KQL:**
-
-```
-DeviceNetworkEvents | where RemotePort in (445, 3389, 5985, 5986)
-```
-
-**CrowdStrike FQL / Event Search** · **SentinelOne Deep Visibility** — SIEM'i beklemeden hızlı pivot takibi.
+### Görselleştirme
+- LogonTracer
