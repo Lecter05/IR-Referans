@@ -1,0 +1,8 @@
+Execution.md
+Download.md
+Persistence.md
+UAC Bypass.md
+Defense Evasion.md
+Credential Access.md
+Network-Discovery.md
+Hızlı Referans.md

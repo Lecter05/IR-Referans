@@ -1,0 +1,10 @@
+Initial Access.md
+Execution.md
+Persistence.md
+Privilege Escalation.md
+Defense Evasion.md
+Credential Access.md
+Discovery.md
+Lateral Movement.md
+Collection & Exfiltration.md
+C2.md

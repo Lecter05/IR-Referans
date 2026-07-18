@@ -1,0 +1,89 @@
+# .github/workflows/deploy.yml
+#
+# Her main push'unda:
+#   1. generate_index.py çalıştırır → index.json günceller
+#   2. Güncel index.json'u repoya commit eder
+#   3. GitHub Pages "Deploy from branch: main" ayarı otomatik yayınlar
+#
+# Sonsuz döngü önlemi:
+#   • paths-ignore: ['index.json'] → botun ürettiği commit yeni workflow tetiklemez
+#
+# Kurulum (bir kez yapılır):
+#   Repo → Settings → Pages → Source: "Deploy from a branch" → main / root
+
+name: İndeks Güncelle ve Yayınla
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'index.json'         # Botun kendi commit'i döngü oluşturmasın
+      - 'search-index.json'  # Botun kendi commit'i döngü oluşturmasın
+  workflow_dispatch:       # Elle tetikleme (Actions sekmesi)
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write     # index.json commit + push için
+
+    steps:
+      - name: Repoyu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # ──────────────────────────────────────────────────────────
+      # FIX: Sağlam exit-code yakalama
+      #
+      # Yöntem: set +e → script'in hata kodunu engelleme
+      #         EXIT_CODE=$? → kesin yakalama
+      #         Boolean output → sonraki step'te güvenli kontrol
+      #         exit 0 → step her zaman başarılı; deploy durmaz
+      # ──────────────────────────────────────────────────────────
+      - name: index.json Üret
+        id: generate
+        shell: bash
+        run: |
+          set +e
+          python generate_index.py 2>&1
+          EXIT_CODE=$?
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "slug_collision=false" >> "$GITHUB_OUTPUT"
+            echo "[OK] generate_index.py başarıyla tamamlandı."
+          elif [ "$EXIT_CODE" -eq 1 ]; then
+            echo "slug_collision=true" >> "$GITHUB_OUTPUT"
+            echo "[UYARI] Slug çakışması tespit edildi (exit 1). index.json yine de üretildi."
+          else
+            echo "slug_collision=false" >> "$GITHUB_OUTPUT"
+            echo "[HATA] generate_index.py beklenmedik exit code döndürdü: $EXIT_CODE"
+          fi
+
+          # Deploy her durumda devam etsin
+          exit 0
+
+      # Slug çakışması varsa GitHub Actions UI'de görünür uyarı üret
+      - name: Slug Çakışması Uyarısı
+        if: steps.generate.outputs.slug_collision == 'true'
+        shell: bash
+        run: |
+          echo "::warning title=Slug Çakışması Tespit Edildi::Bazı markdown dosyaları aynı slug'ı üretiyor. Dosya adlarını standartlaştırın: küçük harf, tire, ASCII. Örnek: scheduled-tasks.md"
+
+      # index.json değiştiyse commit et, değiştiyse sessizce atla
+      - name: index.json Commit Et
+        shell: bash
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json search-index.json
+          if git diff --staged --quiet; then
+            echo "index.json değişmedi, commit atlandı."
+          else
+            git commit -m "chore: index.json ve search-index.json güncellendi [skip ci]"
+            git push
+            echo "index.json güncellendi ve push edildi."
+          fi

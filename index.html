@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Olay müdahalesi, Windows adli bilişim, bellek ve ağ analizi için etkileşimli teknik bilgi tabanı.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>IR Bilgi Tabanı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="analytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8B0KKMF7YB"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/marked@18.0.6/lib/marked.umd.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js" crossorigin="anonymous"></script>
+<script defer src="app.js"></script>
+
+</head>
+<body>
+
+<!-- YÜKLEME EKRANI -->
+<div class="app-overlay hidden" id="app-overlay">
+  <div class="loader-spinner"></div>
+  <div class="loader-text" id="overlay-text">index.json yükleniyor...</div>
+</div>
+
+<header>
+  <div class="header-left">
+    <div class="header-title">IR Bilgi Tabanı</div>
+    <div class="search-wrapper">
+      <span class="search-icon-deco">🔍</span>
+      <input type="search" id="search-input" placeholder="Ara..." aria-label="Bilgi tabanında ara" autocomplete="off" spellcheck="false">
+      <button type="button" class="action-btn" id="search-clear" title="Aramayı Temizle" aria-label="Aramayı temizle">✕</button>
+    </div>
+  </div>
+  <div class="header-right">
+    <button type="button" class="theme-toggle" id="theme-btn" aria-label="Temayı değiştir">
+      <span id="theme-icon">🌙</span> Koyu
+    </button>
+  </div>
+</header>
+
+<div class="main">
+  <!-- SOL PANEL -->
+  <div id="search-panel" class="closed">
+    <div class="resizer resizer-left" id="rsz-left"></div>
+    <div class="search-panel-header">
+      <div class="search-panel-info">
+        <span>Arama Sonuçları</span>
+        <span class="search-count" id="search-count" aria-live="polite">0 Sonuç</span>
+      </div>
+      <button type="button" class="search-panel-close-btn" id="search-panel-close" aria-label="Arama sonuçlarını kapat">✕</button>
+    </div>
+    <div class="search-results-container" id="search-results"></div>
+  </div>
+
+  <!-- ZOOM -->
+  <div class="zoom-controls">
+    <button type="button" class="zoom-btn" id="btn-zoom-in" title="Yakınlaştır" aria-label="Haritayı yakınlaştır">+</button>
+    <button type="button" class="zoom-btn" id="btn-zoom-out" title="Uzaklaştır" aria-label="Haritayı uzaklaştır">-</button>
+    <button type="button" class="zoom-btn" id="btn-zoom-reset" title="Sıfırla" aria-label="Harita görünümünü sıfırla">⌂</button>
+    <button type="button" class="zoom-btn" id="btn-toggle-all" title="Tümünü Aç/Kapat" aria-label="Tüm düğümleri aç veya kapat">↕</button>
+  </div>
+
+  <!-- MİNDMAP -->
+  <div id="mindmap-panel">
+    <div class="startup-status" id="startup-status" role="status" aria-live="polite">
+      <span class="startup-spinner" aria-hidden="true"></span>
+      <span>Harita hazırlanıyor...</span>
+    </div>
+    <svg id="svg" tabindex="0" role="tree" aria-label="IR bilgi tabanı konu haritası"></svg>
+  </div>
+
+  <!-- SAĞ PANEL -->
+  <div id="detail-panel" class="closed" aria-hidden="true">
+    <div class="resizer resizer-right" id="rsz-right"></div>
+    <div class="detail-header">
+      <div class="breadcrumb" id="d-bc">Ana Sayfa</div>
+      <h2 id="d-title">İçerik</h2>
+      <button type="button" class="close-btn" id="btn-close-detail" aria-label="İçerik panelini kapat">✕</button>
+    </div>
+    <div class="detail-body" id="d-body"></div>
+  </div>
+</div>
+
+</body>
+</html>

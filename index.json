@@ -1,0 +1,786 @@
+{
+  "name": "Windows Forensics",
+  "type": "folder",
+  "children": [
+    {
+      "name": "Mittre zinciri",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Initial Access",
+          "type": "file",
+          "slug": "mittre-zinciri/initial-access",
+          "aliases": [
+            "initial-access"
+          ],
+          "path": "Mittre zinciri/Initial Access.md"
+        },
+        {
+          "name": "Execution",
+          "type": "file",
+          "slug": "mittre-zinciri/execution",
+          "aliases": [
+            "execution"
+          ],
+          "path": "Mittre zinciri/Execution.md"
+        },
+        {
+          "name": "Privilege Escalation",
+          "type": "file",
+          "slug": "mittre-zinciri/privilege-escalation",
+          "aliases": [
+            "privilege-escalation"
+          ],
+          "path": "Mittre zinciri/Privilege Escalation.md"
+        }
+      ]
+    },
+    {
+      "name": "Artifacts",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Execution",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/execution/registry",
+              "aliases": [
+                "registry"
+              ],
+              "path": "Artifacts/Execution/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/execution/file-system",
+              "aliases": [
+                "file-system"
+              ],
+              "path": "Artifacts/Execution/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/execution/event-log",
+              "aliases": [
+                "event-log"
+              ],
+              "path": "Artifacts/Execution/EVENT LOG.md"
+            },
+            {
+              "name": "WMI",
+              "type": "file",
+              "slug": "artifacts/execution/wmi",
+              "aliases": [
+                "wmi"
+              ],
+              "path": "Artifacts/Execution/WMI.md"
+            }
+          ]
+        },
+        {
+          "name": "Persistence",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/persistence/registry",
+              "aliases": [
+                "persistence-registry"
+              ],
+              "path": "Artifacts/Persistence/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/persistence/file-system",
+              "aliases": [
+                "persistence-file-system"
+              ],
+              "path": "Artifacts/Persistence/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/persistence/event-log",
+              "aliases": [
+                "persistence-event-log"
+              ],
+              "path": "Artifacts/Persistence/EVENT LOG.md"
+            },
+            {
+              "name": "WMI",
+              "type": "file",
+              "slug": "artifacts/persistence/wmi",
+              "aliases": [
+                "persistence-wmi"
+              ],
+              "path": "Artifacts/Persistence/WMI.md"
+            },
+            {
+              "name": "SCHEDULED TASKS",
+              "type": "file",
+              "slug": "artifacts/persistence/scheduled-tasks",
+              "aliases": [
+                "scheduled-tasks"
+              ],
+              "path": "Artifacts/Persistence/SCHEDULED TASKS.md"
+            },
+            {
+              "name": "SERVICES",
+              "type": "file",
+              "slug": "artifacts/persistence/services",
+              "aliases": [
+                "services"
+              ],
+              "path": "Artifacts/Persistence/SERVICES.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "artifacts/persistence/nadir",
+              "aliases": [
+                "nadir"
+              ],
+              "path": "Artifacts/Persistence/NADİR.md"
+            }
+          ]
+        },
+        {
+          "name": "file folder interaction",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/file-folder-interaction/registry",
+              "aliases": [
+                "file-folder-interaction-registry"
+              ],
+              "path": "Artifacts/file folder interaction/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/file-folder-interaction/file-system",
+              "aliases": [
+                "file-folder-interaction-file-system"
+              ],
+              "path": "Artifacts/file folder interaction/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/file-folder-interaction/event-log",
+              "aliases": [
+                "file-folder-interaction-event-log"
+              ],
+              "path": "Artifacts/file folder interaction/EVENT LOG.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "artifacts/file-folder-interaction/nadir",
+              "aliases": [
+                "file-folder-interaction-nadir"
+              ],
+              "path": "Artifacts/file folder interaction/NADİR.md"
+            }
+          ]
+        },
+        {
+          "name": "Deletion & Anti-Forensics",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/registry",
+              "aliases": [
+                "deletion-anti-forensics-registry"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/file-system",
+              "aliases": [
+                "deletion-anti-forensics-file-system"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/event-log",
+              "aliases": [
+                "deletion-anti-forensics-event-log"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/EVENT LOG.md"
+            },
+            {
+              "name": "VOLUME SHADOW COPY",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/volume-shadow-copy",
+              "aliases": [
+                "volume-shadow-copy"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/VOLUME SHADOW COPY.md"
+            },
+            {
+              "name": "RECYCLE BIN",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/recycle-bin",
+              "aliases": [
+                "recycle-bin"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/RECYCLE BIN.md"
+            },
+            {
+              "name": "TIMESTAMP MANIPULATION",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/timestamp-manipulation",
+              "aliases": [
+                "timestamp-manipulation"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/TIMESTAMP MANIPULATION.md"
+            },
+            {
+              "name": "LOG CLEAR",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/log-clear",
+              "aliases": [
+                "log-clear"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/LOG CLEAR.md"
+            },
+            {
+              "name": "DİĞER",
+              "type": "file",
+              "slug": "artifacts/deletion-anti-forensics/diger",
+              "aliases": [
+                "diger"
+              ],
+              "path": "Artifacts/Deletion & Anti-Forensics/DİĞER.md"
+            }
+          ]
+        },
+        {
+          "name": "Network",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/network/registry",
+              "aliases": [
+                "network-registry"
+              ],
+              "path": "Artifacts/Network/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/network/file-system",
+              "aliases": [
+                "network-file-system"
+              ],
+              "path": "Artifacts/Network/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/network/event-log",
+              "aliases": [
+                "network-event-log"
+              ],
+              "path": "Artifacts/Network/EVENT LOG.md"
+            },
+            {
+              "name": "BROWSER",
+              "type": "file",
+              "slug": "artifacts/network/browser",
+              "aliases": [
+                "browser"
+              ],
+              "path": "Artifacts/Network/BROWSER.md"
+            },
+            {
+              "name": "WIRELESS",
+              "type": "file",
+              "slug": "artifacts/network/wireless",
+              "aliases": [
+                "wireless"
+              ],
+              "path": "Artifacts/Network/WIRELESS.md"
+            },
+            {
+              "name": "FIREWALL & PROXY",
+              "type": "file",
+              "slug": "artifacts/network/firewall-proxy",
+              "aliases": [
+                "firewall-proxy"
+              ],
+              "path": "Artifacts/Network/FIREWALL & PROXY.md"
+            },
+            {
+              "name": "REMOTE ACCESS",
+              "type": "file",
+              "slug": "artifacts/network/remote-access",
+              "aliases": [
+                "remote-access"
+              ],
+              "path": "Artifacts/Network/REMOTE ACCESS.md"
+            },
+            {
+              "name": "LIVE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/network/live-system",
+              "aliases": [
+                "live-system"
+              ],
+              "path": "Artifacts/Network/LIVE SYSTEM.md"
+            }
+          ]
+        },
+        {
+          "name": "Accounts & Auth",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/registry",
+              "aliases": [
+                "accounts-auth-registry"
+              ],
+              "path": "Artifacts/Accounts & Auth/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/file-system",
+              "aliases": [
+                "accounts-auth-file-system"
+              ],
+              "path": "Artifacts/Accounts & Auth/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/event-log",
+              "aliases": [
+                "accounts-auth-event-log"
+              ],
+              "path": "Artifacts/Accounts & Auth/EVENT LOG.md"
+            },
+            {
+              "name": "SAM & LSA",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/sam-lsa",
+              "aliases": [
+                "sam-lsa"
+              ],
+              "path": "Artifacts/Accounts & Auth/SAM & LSA.md"
+            },
+            {
+              "name": "CREDENTIAL MANAGER",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/credential-manager",
+              "aliases": [
+                "credential-manager"
+              ],
+              "path": "Artifacts/Accounts & Auth/CREDENTIAL MANAGER.md"
+            },
+            {
+              "name": "KERBEROS & NTLM",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/kerberos-ntlm",
+              "aliases": [
+                "kerberos-ntlm"
+              ],
+              "path": "Artifacts/Accounts & Auth/KERBEROS & NTLM.md"
+            },
+            {
+              "name": "DOMAIN",
+              "type": "file",
+              "slug": "artifacts/accounts-auth/domain",
+              "aliases": [
+                "domain"
+              ],
+              "path": "Artifacts/Accounts & Auth/DOMAIN.md"
+            }
+          ]
+        },
+        {
+          "name": "System-OS",
+          "type": "folder",
+          "children": [
+            {
+              "name": "REGISTRY",
+              "type": "file",
+              "slug": "artifacts/system-os/registry",
+              "aliases": [
+                "system-os-registry"
+              ],
+              "path": "Artifacts/System-OS/REGISTRY.md"
+            },
+            {
+              "name": "FILE SYSTEM",
+              "type": "file",
+              "slug": "artifacts/system-os/file-system",
+              "aliases": [
+                "system-os-file-system"
+              ],
+              "path": "Artifacts/System-OS/FILE SYSTEM.md"
+            },
+            {
+              "name": "EVENT LOG",
+              "type": "file",
+              "slug": "artifacts/system-os/event-log",
+              "aliases": [
+                "system-os-event-log"
+              ],
+              "path": "Artifacts/System-OS/EVENT LOG.md"
+            },
+            {
+              "name": "DEVICE & DRIVER",
+              "type": "file",
+              "slug": "artifacts/system-os/device-driver",
+              "aliases": [
+                "device-driver"
+              ],
+              "path": "Artifacts/System-OS/DEVICE & DRIVER.md"
+            },
+            {
+              "name": "GROUP POLICY",
+              "type": "file",
+              "slug": "artifacts/system-os/group-policy",
+              "aliases": [
+                "group-policy"
+              ],
+              "path": "Artifacts/System-OS/GROUP POLICY.md"
+            },
+            {
+              "name": "CRASH & ERROR REPORTING",
+              "type": "file",
+              "slug": "artifacts/system-os/crash-error-reporting",
+              "aliases": [
+                "crash-error-reporting"
+              ],
+              "path": "Artifacts/System-OS/CRASH & ERROR REPORTING.md"
+            },
+            {
+              "name": "VIRTUAL MACHINE",
+              "type": "file",
+              "slug": "artifacts/system-os/virtual-machine",
+              "aliases": [
+                "virtual-machine"
+              ],
+              "path": "Artifacts/System-OS/VIRTUAL MACHINE.md"
+            },
+            {
+              "name": "NADİR",
+              "type": "file",
+              "slug": "artifacts/system-os/nadir",
+              "aliases": [
+                "system-os-nadir"
+              ],
+              "path": "Artifacts/System-OS/NADİR.md"
+            }
+          ]
+        },
+        {
+          "name": "Event Logs",
+          "type": "folder",
+          "children": [
+            {
+              "name": "SECURITY",
+              "type": "file",
+              "slug": "artifacts/event-logs/security",
+              "aliases": [
+                "security"
+              ],
+              "path": "Artifacts/Event Logs/SECURITY.md"
+            },
+            {
+              "name": "SYSTEM",
+              "type": "file",
+              "slug": "artifacts/event-logs/system",
+              "aliases": [
+                "system"
+              ],
+              "path": "Artifacts/Event Logs/SYSTEM.md"
+            },
+            {
+              "name": "APPLICATION",
+              "type": "file",
+              "slug": "artifacts/event-logs/application",
+              "aliases": [
+                "application"
+              ],
+              "path": "Artifacts/Event Logs/APPLICATION.md"
+            },
+            {
+              "name": "POWERSHELL",
+              "type": "file",
+              "slug": "artifacts/event-logs/powershell",
+              "aliases": [
+                "powershell"
+              ],
+              "path": "Artifacts/Event Logs/POWERSHELL.md"
+            },
+            {
+              "name": "SYSMON",
+              "type": "file",
+              "slug": "artifacts/event-logs/sysmon",
+              "aliases": [
+                "sysmon"
+              ],
+              "path": "Artifacts/Event Logs/SYSMON.md"
+            },
+            {
+              "name": "TASK SCHEDULER",
+              "type": "file",
+              "slug": "artifacts/event-logs/task-scheduler",
+              "aliases": [
+                "task-scheduler"
+              ],
+              "path": "Artifacts/Event Logs/TASK SCHEDULER.md"
+            },
+            {
+              "name": "RDP & REMOTE ACCESS",
+              "type": "file",
+              "slug": "artifacts/event-logs/rdp-remote-access",
+              "aliases": [
+                "rdp-remote-access"
+              ],
+              "path": "Artifacts/Event Logs/RDP & REMOTE ACCESS.md"
+            },
+            {
+              "name": "WMI",
+              "type": "file",
+              "slug": "artifacts/event-logs/wmi",
+              "aliases": [
+                "event-logs-wmi"
+              ],
+              "path": "Artifacts/Event Logs/WMI.md"
+            },
+            {
+              "name": "NETWORK & FIREWALL",
+              "type": "file",
+              "slug": "artifacts/event-logs/network-firewall",
+              "aliases": [
+                "network-firewall"
+              ],
+              "path": "Artifacts/Event Logs/NETWORK & FIREWALL.md"
+            },
+            {
+              "name": "DEFENDER & APPLOCKER",
+              "type": "file",
+              "slug": "artifacts/event-logs/defender-applocker",
+              "aliases": [
+                "defender-applocker"
+              ],
+              "path": "Artifacts/Event Logs/DEFENDER & APPLOCKER.md"
+            },
+            {
+              "name": "DİĞER",
+              "type": "file",
+              "slug": "artifacts/event-logs/diger",
+              "aliases": [
+                "event-logs-diger"
+              ],
+              "path": "Artifacts/Event Logs/DİĞER.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analiz Notları",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Lateral Movement",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Hızlı Triyaj",
+              "type": "file",
+              "slug": "analiz-notlari/lateral-movement/hizli-triyaj",
+              "aliases": [
+                "hizli-triyaj"
+              ],
+              "path": "Analiz Notları/Lateral Movement/Hızlı Triyaj.md"
+            }
+          ]
+        },
+        {
+          "name": "Memory Forensic",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Hızlı Triyaj",
+              "type": "file",
+              "slug": "analiz-notlari/memory-forensic/hizli-triyaj",
+              "aliases": [
+                "memory-forensic-hizli-triyaj"
+              ],
+              "path": "Analiz Notları/Memory Forensic/Hızlı Triyaj.md"
+            },
+            {
+              "name": "Volatility 3",
+              "type": "file",
+              "slug": "analiz-notlari/memory-forensic/volatility-3",
+              "aliases": [
+                "volatility-3"
+              ],
+              "path": "Analiz Notları/Memory Forensic/Volatility 3.md"
+            },
+            {
+              "name": "Volatility 2",
+              "type": "file",
+              "slug": "analiz-notlari/memory-forensic/volatility-2",
+              "aliases": [
+                "volatility-2"
+              ],
+              "path": "Analiz Notları/Memory Forensic/Volatility 2.md"
+            }
+          ]
+        },
+        {
+          "name": "Network Forensic",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Pcap Analizi",
+              "type": "file",
+              "slug": "analiz-notlari/network-forensic/pcap-analizi",
+              "aliases": [
+                "pcap-analizi"
+              ],
+              "path": "Analiz Notları/Network Forensic/Pcap Analizi.md"
+            },
+            {
+              "name": "Wireshark Threat Hunting",
+              "type": "file",
+              "slug": "analiz-notlari/network-forensic/wireshark-threat-hunting",
+              "aliases": [
+                "wireshark-threat-hunting"
+              ],
+              "path": "Analiz Notları/Network Forensic/Wireshark Threat Hunting.md"
+            },
+            {
+              "name": "Zeek Kullanım",
+              "type": "file",
+              "slug": "analiz-notlari/network-forensic/zeek-kullanim",
+              "aliases": [
+                "zeek-kullanim"
+              ],
+              "path": "Analiz Notları/Network Forensic/Zeek Kullanım.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Referans",
+      "type": "folder",
+      "children": [
+        {
+          "name": "LOLBİN",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Execution",
+              "type": "file",
+              "slug": "referans/lolbin/execution",
+              "aliases": [
+                "lolbin-execution"
+              ],
+              "path": "Referans/LOLBİN/Execution.md"
+            },
+            {
+              "name": "Download",
+              "type": "file",
+              "slug": "referans/lolbin/download",
+              "aliases": [
+                "download"
+              ],
+              "path": "Referans/LOLBİN/Download.md"
+            },
+            {
+              "name": "Persistence",
+              "type": "file",
+              "slug": "referans/lolbin/persistence",
+              "aliases": [
+                "persistence"
+              ],
+              "path": "Referans/LOLBİN/Persistence.md"
+            },
+            {
+              "name": "UAC Bypass",
+              "type": "file",
+              "slug": "referans/lolbin/uac-bypass",
+              "aliases": [
+                "uac-bypass"
+              ],
+              "path": "Referans/LOLBİN/UAC Bypass.md"
+            },
+            {
+              "name": "Defense Evasion",
+              "type": "file",
+              "slug": "referans/lolbin/defense-evasion",
+              "aliases": [
+                "defense-evasion"
+              ],
+              "path": "Referans/LOLBİN/Defense Evasion.md"
+            },
+            {
+              "name": "Credential Access",
+              "type": "file",
+              "slug": "referans/lolbin/credential-access",
+              "aliases": [
+                "credential-access"
+              ],
+              "path": "Referans/LOLBİN/Credential Access.md"
+            },
+            {
+              "name": "Network-Discovery",
+              "type": "file",
+              "slug": "referans/lolbin/network-discovery",
+              "aliases": [
+                "network-discovery"
+              ],
+              "path": "Referans/LOLBİN/Network-Discovery.md"
+            },
+            {
+              "name": "Hızlı Referans",
+              "type": "file",
+              "slug": "referans/lolbin/hizli-referans",
+              "aliases": [
+                "hizli-referans"
+              ],
+              "path": "Referans/LOLBİN/Hızlı Referans.MD"
+            }
+          ]
+        },
+        {
+          "name": "Hive Artifacts Lokasyon",
+          "type": "file",
+          "slug": "referans/hive-artifacts-lokasyon",
+          "aliases": [
+            "hive-artifacts-lokasyon"
+          ],
+          "path": "Referans/Hive Artifacts Lokasyon.md"
+        }
+      ]
+    }
+  ]
+}
