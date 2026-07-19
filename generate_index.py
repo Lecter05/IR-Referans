@@ -54,6 +54,8 @@ EXCLUDED_FILES = {
     SEARCH_OUTPUT_FILE,
     "order.txt",
 }
+EXCLUDED_DIR_KEYS = frozenset(name.casefold() for name in EXCLUDED_DIRS)
+EXCLUDED_FILE_KEYS = frozenset(name.casefold() for name in EXCLUDED_FILES)
 
 
 def slugify(text: str) -> str:
@@ -147,7 +149,7 @@ def sorted_entries(abs_path: Path | str) -> list[os.DirEntry[str]]:
         print(f"[UYARI] Erişim reddedildi: {folder} ({exc})")
         return []
 
-    entries.sort(key=lambda entry: (entry.is_file(), entry.name.casefold()))
+    entries.sort(key=lambda entry: (entry.is_file(), entry.name.casefold(), entry.name))
     order_file = folder / "order.txt"
     if not order_file.is_file():
         return entries
@@ -183,13 +185,14 @@ def sorted_entries(abs_path: Path | str) -> list[os.DirEntry[str]]:
             rank.get(entry.name.casefold(), len(order_list)),
             entry.is_file(),
             entry.name.casefold(),
+            entry.name,
         ),
     )
 
 
 def read_markdown_file(path: Path | str, rel_path: str) -> str:
     file_path = Path(path)
-    for encoding in ("utf-8", "utf-8-sig"):
+    for encoding in ("utf-8-sig", "utf-8"):
         try:
             return file_path.read_text(encoding=encoding)
         except UnicodeDecodeError:
@@ -221,7 +224,8 @@ def scan_dir(
     node = {"name": abs_path.name, "type": "folder", "children": []}
 
     for entry in sorted_entries(abs_path):
-        if entry.name in EXCLUDED_DIRS or entry.name in EXCLUDED_FILES or entry.name.startswith("."):
+        entry_key = entry.name.casefold()
+        if entry_key in EXCLUDED_DIR_KEYS or entry_key in EXCLUDED_FILE_KEYS or entry.name.startswith("."):
             continue
         if entry.is_symlink():
             print(f"[UYARI] Symlink atlandı: {entry.path}")
@@ -292,31 +296,106 @@ def count_nodes(node: dict) -> tuple[int, int]:
     return total_files, total_folders
 
 
-def write_json(path: Path | str, data: dict | list) -> None:
-    """JSON'u aynı klasörde geçici dosyaya yazıp atomik olarak değiştirir."""
-    target = Path(path)
+def _serialize_json(data: dict | list) -> bytes:
+    return (json.dumps(data, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def _stage_bytes(target: Path, payload: bytes, *, suffix: str = ".tmp") -> Path:
+    """Payload'u hedefle aynı klasörde fsync edilmiş geçici dosyaya yazar."""
     target.parent.mkdir(parents=True, exist_ok=True)
     temp_path: Path | None = None
 
     try:
         with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            newline="\n",
+            mode="wb",
             prefix=f".{target.name}.",
-            suffix=".tmp",
+            suffix=suffix,
             dir=target.parent,
             delete=False,
         ) as handle:
             temp_path = Path(handle.name)
-            json.dump(data, handle, ensure_ascii=False, indent=2)
-            handle.write("\n")
+            handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temp_path, target)
-    finally:
+        return temp_path
+    except Exception:
         if temp_path and temp_path.exists():
             temp_path.unlink()
+        raise
+
+
+def write_json(path: Path | str, data: dict | list) -> None:
+    """JSON'u aynı klasörde geçici dosyaya yazıp atomik olarak değiştirir."""
+    target = Path(path)
+    temp_path = _stage_bytes(target, _serialize_json(data))
+
+    try:
+        os.replace(temp_path, target)
+    finally:
+        if temp_path.exists():
+            temp_path.unlink()
+
+
+def write_json_pair(
+    first_path: Path | str,
+    first_data: dict | list,
+    second_path: Path | str,
+    second_data: dict | list,
+) -> None:
+    """İki JSON'u tamamen hazırladıktan sonra yayınlar; kısmi hatada geri alır."""
+    first_target = Path(first_path)
+    second_target = Path(second_path)
+    if os.path.normcase(str(first_target.resolve())) == os.path.normcase(str(second_target.resolve())):
+        raise ValueError("İndeks ve arama indeksi aynı hedef dosyayı kullanamaz.")
+
+    targets = (first_target, second_target)
+    payloads = (_serialize_json(first_data), _serialize_json(second_data))
+    staged: dict[Path, Path] = {}
+    backups: dict[Path, Path | None] = {}
+    committed: list[Path] = []
+    preserved_backups: set[Path] = set()
+
+    try:
+        for target, payload in zip(targets, payloads):
+            staged[target] = _stage_bytes(target, payload)
+
+        for target in targets:
+            if target.exists():
+                if not target.is_file():
+                    raise OSError(f"JSON hedefi normal dosya değil: {target}")
+                backups[target] = _stage_bytes(target, target.read_bytes(), suffix=".bak")
+            else:
+                backups[target] = None
+
+        for target in targets:
+            os.replace(staged[target], target)
+            committed.append(target)
+
+    except Exception as exc:
+        rollback_errors: list[str] = []
+        for target in reversed(committed):
+            backup = backups.get(target)
+            try:
+                if backup is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    os.replace(backup, target)
+                    backups[target] = None
+            except OSError as rollback_exc:
+                detail = f"{target}: {rollback_exc}"
+                if backup is not None and backup.exists():
+                    preserved_backups.add(backup)
+                    detail += f" (yedek korundu: {backup})"
+                rollback_errors.append(detail)
+
+        if rollback_errors:
+            details = "; ".join(rollback_errors)
+            raise OSError(f"{exc}; JSON geri alma başarısız: {details}") from exc
+        raise
+    finally:
+        for temp_path in (*staged.values(), *(path for path in backups.values() if path is not None)):
+            if temp_path not in preserved_backups and temp_path.exists():
+                temp_path.unlink()
 
 
 def _resolve_output_path(base_dir: Path, output_path: Path | str) -> Path:
@@ -364,15 +443,17 @@ def generate_indexes(
 
         index_target = _resolve_output_path(base, output_path)
         search_target = _resolve_output_path(base, search_output_path)
-        write_json(index_target, root_node)
-        write_json(
+        search_document = {
+            "schemaVersion": 2,
+            "rootName": root_name,
+            "count": len(search_items),
+            "items": search_items,
+        }
+        write_json_pair(
+            index_target,
+            root_node,
             search_target,
-            {
-                "schemaVersion": 2,
-                "rootName": root_name,
-                "count": len(search_items),
-                "items": search_items,
-            },
+            search_document,
         )
 
         total_files, total_folders = count_nodes(root_node)

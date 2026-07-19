@@ -9,10 +9,32 @@ function updateThemeButton(theme) {
   icon.textContent = theme === 'dark' ? '🌙' : '☀️';
   button.replaceChildren(icon, document.createTextNode(theme === 'dark' ? ' Koyu' : ' Açık'));
   button.setAttribute('aria-pressed', String(theme === 'light'));
+  button.setAttribute(
+    'aria-label',
+    theme === 'dark' ? 'Koyu tema; açık temaya geç' : 'Açık tema; koyu temaya geç'
+  );
+}
+
+function readStoredTheme() {
+  try {
+    const stored = window.localStorage.getItem('theme');
+    return stored === 'light' || stored === 'dark' ? stored : 'dark';
+  } catch (error) {
+    console.warn('Tema tercihi okunamadı:', error);
+    return 'dark';
+  }
+}
+
+function storeTheme(theme) {
+  try {
+    window.localStorage.setItem('theme', theme);
+  } catch (error) {
+    console.warn('Tema tercihi kaydedilemedi:', error);
+  }
 }
 
 (function initTheme() {
-  const theme = localStorage.getItem('theme') || 'dark';
+  const theme = readStoredTheme();
   document.documentElement.setAttribute('data-theme', theme);
   updateThemeButton(theme);
 })();
@@ -21,7 +43,7 @@ document.getElementById('theme-btn').addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  storeTheme(next);
   updateThemeButton(next);
 });
 
@@ -37,6 +59,20 @@ function createElement(tagName, className, text = '') {
 
 function setPanelMessage(container, text, className = 'panel-message') {
   container.replaceChildren(createElement('div', className, text));
+}
+
+function setPanelOpen(panel, isOpen) {
+  panel.classList.toggle('closed', !isOpen);
+  panel.setAttribute('aria-hidden', String(!isOpen));
+  if (isOpen) panel.removeAttribute('inert');
+  else panel.setAttribute('inert', '');
+}
+
+function setMapControlsDisabled(disabled) {
+  ['btn-zoom-in', 'btn-zoom-out', 'btn-zoom-reset', 'btn-toggle-all'].forEach(id => {
+    document.getElementById(id).disabled = disabled;
+  });
+  document.getElementById('search-input').disabled = disabled;
 }
 
 function setStartupStatus(text) {
@@ -99,12 +135,25 @@ let root, svg, g, zoomBehavior;
 let width, height;
 let nodeCounter = 0;
 let activeKbNode = null;
-let isAllExpanded = false;
 const duration = 250;
+const reducedMotionQuery = window.matchMedia
+  ? window.matchMedia('(prefers-reduced-motion: reduce)')
+  : null;
+let pendingZoomTransform = null;
+let zoomAnimationFrame = null;
+let mapMotionToken = 0;
+let layoutMotionTimeout = null;
+let viewportResizeTimeout = null;
+let isResizingLeft = false;
+let isResizingRight = false;
+let resizeAnimationFrame = null;
+let pendingResizeClientX = null;
 
 // Arama indeksi: sadece başlıklar (önce) + cache'e alınan içerikler (sonra)
 const SEARCH_INDEX = new Map(); // nodeId → { name, type, path, content|null }
 const SLUG_INDEX = new Map();   // canonical slug veya legacy alias → node
+const activeSearchMatchIds = new Set();
+const activeSearchPathIds = new Set();
 let searchIndexPromise = null;
 let searchWarmupPromise = null;
 let searchWarmupDone = false;
@@ -112,6 +161,64 @@ let searchRequestToken = 0;
 let detailRequestToken = 0;
 let resolveTreeReady;
 const treeReadyPromise = new Promise(resolve => { resolveTreeReady = resolve; });
+
+const MARKDOWN_LIBRARIES = [
+  {
+    globalName: 'marked',
+    src: 'https://cdn.jsdelivr.net/npm/marked@18.0.6/lib/marked.umd.js',
+    integrity: 'sha384-uGn1eBC40GtuBgao0epc/cz9O4Lo8/flg/10SW+69UjLI5nP31iT4UPc65Xz10Le'
+  },
+  {
+    globalName: 'DOMPurify',
+    src: 'https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js',
+    integrity: 'sha384-piCcpDdJ7qVeK4Tv8Z6Hpcr3ZBIgP16TxQTPVfsLFdZ5uDgwc3Y8Ho7oUnqf12qu'
+  }
+];
+let markdownLibrariesPromise = null;
+
+function motionDuration(milliseconds) {
+  return reducedMotionQuery && reducedMotionQuery.matches ? 0 : milliseconds;
+}
+
+function loadExternalScript({ globalName, src, integrity }) {
+  if (window[globalName]) return Promise.resolve(window[globalName]);
+
+  return new Promise((resolve, reject) => {
+    let script = document.querySelector(`script[data-library="${globalName}"]`);
+    const handleLoad = () => {
+      if (window[globalName]) resolve(window[globalName]);
+      else reject(new Error(`${globalName} yüklendi ancak kullanıma hazır değil.`));
+    };
+    const handleError = () => {
+      script && script.remove();
+      reject(new Error(`${globalName} kütüphanesi yüklenemedi.`));
+    };
+
+    if (!script) {
+      script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.integrity = integrity;
+      script.dataset.library = globalName;
+    }
+    script.addEventListener('load', handleLoad, { once: true });
+    script.addEventListener('error', handleError, { once: true });
+    if (!script.isConnected) document.head.appendChild(script);
+  });
+}
+
+function ensureMarkdownLibraries() {
+  if (window.marked && window.DOMPurify) return Promise.resolve();
+  if (!markdownLibrariesPromise) {
+    markdownLibrariesPromise = Promise.all(MARKDOWN_LIBRARIES.map(loadExternalScript))
+      .catch(error => {
+        markdownLibrariesPromise = null;
+        throw error;
+      });
+  }
+  return markdownLibrariesPromise;
+}
 
 // ================================================================
 // CANVAS ÖLÇÜM
@@ -131,6 +238,11 @@ function nodeWidth(d) {
 // ================================================================
 async function bootstrap() {
   setStartupStatus('Harita hazırlanıyor...');
+  if (!window.d3) {
+    hideStartupStatus();
+    showFatalError('Harita kütüphanesi yüklenemedi.', 'D3 kullanıma hazır değil');
+    return;
+  }
   try {
     const response = await fetch('index.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -155,13 +267,32 @@ async function loadSearchIndex() {
     const response = await fetch('search-index.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    if (!data || !Array.isArray(data.items)) throw new Error('Geçersiz arama indeksi');
+    if (!data || data.schemaVersion !== 2 || !Array.isArray(data.items)
+      || data.count !== data.items.length) {
+      throw new Error('Geçersiz arama indeksi');
+    }
 
     await treeReadyPromise;
+    const expectedFileCount = Array.from(SEARCH_INDEX.values())
+      .filter(entry => entry.type === 'file').length;
+    const resolvedItems = new Map();
     data.items.forEach(item => {
+      if (!item || typeof item.slug !== 'string' || typeof item.path !== 'string'
+        || typeof item.content !== 'string') {
+        throw new Error('Arama indeksi kaydı geçersiz');
+      }
       const node = findNodeBySlug(item.slug);
       const entry = node ? SEARCH_INDEX.get(node.id) : null;
-      if (entry) entry.content = item.content || '';
+      if (!entry || entry.type !== 'file' || entry.path !== item.path || resolvedItems.has(node.id)) {
+        throw new Error(`Arama indeksi ağaçla eşleşmiyor: ${item.path}`);
+      }
+      resolvedItems.set(node.id, item.content);
+    });
+    if (resolvedItems.size !== expectedFileCount) {
+      throw new Error('Arama indeksinde eksik içerik var');
+    }
+    resolvedItems.forEach((content, nodeId) => {
+      SEARCH_INDEX.get(nodeId).content = content;
     });
     searchWarmupDone = true;
     return true;
@@ -223,10 +354,61 @@ function prefetchInitialHashContent(data) {
   const slug = currentDecodedHash();
   const target = findDataNodeBySlug(data, slug);
   if (!target || target.type !== 'file' || !target.path) return Promise.resolve(null);
-  return getMarkdown(target.path).catch(error => {
+  return Promise.all([getMarkdown(target.path), ensureMarkdownLibraries()]).catch(error => {
     console.warn(`İlk içerik ön-yüklemesi başarısız: ${target.path}`, error);
     return null;
   });
+}
+
+function flushZoomTransform() {
+  if (zoomAnimationFrame !== null) {
+    window.cancelAnimationFrame(zoomAnimationFrame);
+    zoomAnimationFrame = null;
+  }
+  if (pendingZoomTransform && g) {
+    g.attr('transform', pendingZoomTransform);
+    pendingZoomTransform = null;
+  }
+}
+
+function queueZoomTransform(transform) {
+  pendingZoomTransform = transform;
+  if (zoomAnimationFrame !== null) return;
+  zoomAnimationFrame = window.requestAnimationFrame(() => {
+    zoomAnimationFrame = null;
+    if (pendingZoomTransform && g) {
+      g.attr('transform', pendingZoomTransform);
+      pendingZoomTransform = null;
+    }
+  });
+}
+
+function beginMapMotion() {
+  mapMotionToken += 1;
+  if (svg) svg.classed('is-navigating', true);
+}
+
+function endMapMotion() {
+  flushZoomTransform();
+  const token = mapMotionToken;
+  window.requestAnimationFrame(() => {
+    if (svg && token === mapMotionToken) svg.classed('is-navigating', false);
+  });
+}
+
+function markLayoutMotion(milliseconds) {
+  if (!svg) return;
+  if (layoutMotionTimeout !== null) window.clearTimeout(layoutMotionTimeout);
+  if (milliseconds <= 0) {
+    svg.classed('is-layout-changing', false);
+    layoutMotionTimeout = null;
+    return;
+  }
+  svg.classed('is-layout-changing', true);
+  layoutMotionTimeout = window.setTimeout(() => {
+    svg && svg.classed('is-layout-changing', false);
+    layoutMotionTimeout = null;
+  }, milliseconds + 40);
 }
 
 // ================================================================
@@ -242,13 +424,16 @@ function initD3(data) {
 
   zoomBehavior = d3.zoom()
     .scaleExtent([0.1, 3])
-    .on('zoom', e => g.attr('transform', e.transform));
+    .on('start.motion', beginMapMotion)
+    .on('zoom.render', e => queueZoomTransform(e.transform))
+    .on('end.motion', endMapMotion);
   svg.call(zoomBehavior).on('dblclick.zoom', null);
 
   root = d3.hierarchy(data, d => d.children);
   root.x0 = height / 2;
   root.y0 = 0;
   root.eachBefore(d => { d.id = ++nodeCounter; });
+  activeKbNode = root;
 
   // Arama indeksini başlıklar ile oluştur
   root.each(d => {
@@ -269,21 +454,23 @@ function initD3(data) {
   root.children && root.children.forEach(collapse);
   update(root);
 
-  svg.transition().duration(0).call(
+  svg.call(
     zoomBehavior.transform,
     d3.zoomIdentity.translate(width / 4, height / 2).scale(0.9)
   );
 
+  setMapControlsDisabled(false);
+
   checkUrlHash();
 
-  // Panel boyutlandırınca haritayı yeniden ortala
-  new ResizeObserver(() => {
+  // Panel boyutlandırması bittikten sonra haritayı tek kez yeniden ortala.
+  const handleViewportResize = () => {
     refreshViewportSize();
-    if (activeKbNode && svg && svg.node()) {
-      const currentScale = d3.zoomTransform(svg.node()).k;
-      panToNode(activeKbNode, currentScale, 0);
-    }
-  }).observe(panel);
+    syncPanelResizeAccessibility();
+    scheduleViewportRecenter();
+  };
+  if ('ResizeObserver' in window) new ResizeObserver(handleViewportResize).observe(panel);
+  else window.addEventListener('resize', handleViewportResize);
 }
 
 // ================================================================
@@ -315,7 +502,8 @@ function findNodeBySlug(slug) {
 }
 
 function update(source, skipAnim = false) {
-  const dur = skipAnim ? 0 : duration;
+  const dur = skipAnim ? 0 : motionDuration(duration);
+  markLayoutMotion(dur);
   const treeLayout = d3.tree().nodeSize([45, 200]);
   const treeData = treeLayout(root);
   const nodes = treeData.descendants();
@@ -332,11 +520,16 @@ function update(source, skipAnim = false) {
       return `node ${lvl}`;
     })
     .attr('transform', () => `translate(${source.y0},${source.x0})`)
-    .attr('tabindex', 0)
+    .attr('tabindex', d => activeKbNode && d.id === activeKbNode.id ? 0 : -1)
     .attr('role', 'treeitem')
+    .attr('aria-level', d => d.depth + 1)
     .attr('aria-label', d => `${d.data.name}${d.data.type === 'file' ? ', içerik' : ', klasör'}`)
     .style('opacity', 0)
     .on('click', (event, d) => clickNode(d))
+    .on('focus', (event, d) => {
+      activeKbNode = d;
+      syncActiveNodeFocus();
+    })
     .on('keydown', (event, d) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -358,6 +551,10 @@ function update(source, skipAnim = false) {
 
   const nodeUpdate = nodeEnter.merge(node);
 
+  nodeUpdate
+    .attr('tabindex', d => activeKbNode && d.id === activeKbNode.id ? 0 : -1)
+    .attr('aria-expanded', d => d.data.type === 'file' ? null : String(Boolean(d.children)));
+
   nodeUpdate.select('.node-rect')
     .attr('width', d => nodeWidth(d));
 
@@ -369,7 +566,9 @@ function update(source, skipAnim = false) {
       return 0;
     });
 
-  nodeUpdate.classed('kb-focus', d => activeKbNode && d.id === activeKbNode.id);
+  nodeUpdate
+    .classed('kb-focus', d => activeKbNode && d.id === activeKbNode.id)
+    .classed('search-match', d => activeSearchMatchIds.has(d.id));
 
   nodeUpdate.transition().duration(dur)
     .attr('transform', d => `translate(${d.y},${d.x})`)
@@ -383,9 +582,12 @@ function update(source, skipAnim = false) {
   const link = g.selectAll('path.link').data(links, d => d.id);
 
   const diagFrom = { x: source.x0, y: source.y0 };
-  link.enter().insert('path', 'g').attr('class', 'link')
+  const linkUpdate = link.enter().insert('path', 'g').attr('class', 'link')
     .attr('d', () => diagonal(diagFrom, diagFrom))
-    .merge(link).transition().duration(dur)
+    .merge(link)
+    .classed('highlighted', d => activeSearchPathIds.has(d.id));
+
+  linkUpdate.transition().duration(dur)
     .attr('d', d => diagonal(d, d.parent));
 
   link.exit().transition().duration(dur)
@@ -408,10 +610,14 @@ function diagonal(s, d) {
 // ================================================================
 function clickNode(d) {
   activeKbNode = d;
+  if (d.data.type === 'file') {
+    syncActiveNodeFocus();
+    showDetail(d);
+    return;
+  }
   if (d.children) { d._children = d.children; d.children = null; }
   else if (d._children) { d.children = d._children; d._children = null; }
   update(d);
-  if (d.data.type === 'file') showDetail(d);
 }
 
 function refreshViewportSize() {
@@ -448,12 +654,12 @@ function panToNode(node, scale = 1.3, speed = 500) {
   if (!Number.isFinite(width) || !Number.isFinite(height)) return false;
   if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return false;
 
-  svg.transition().duration(speed).call(
-    zoomBehavior.transform,
-    d3.zoomIdentity
-      .translate(width / 2 - node.y * scale, height / 2 - node.x * scale)
-      .scale(scale)
-  );
+  const targetTransform = d3.zoomIdentity
+    .translate(width / 2 - node.y * scale, height / 2 - node.x * scale)
+    .scale(scale);
+  const dur = motionDuration(speed);
+  if (dur <= 0) svg.call(zoomBehavior.transform, targetTransform);
+  else svg.transition().duration(dur).call(zoomBehavior.transform, targetTransform);
   return true;
 }
 
@@ -470,9 +676,15 @@ function panToNodeWhenReady(node, scale = 1.3, speed = 500, tries = 4) {
   });
 }
 
-function syncActiveNodeFocus() {
+function syncActiveNodeFocus(focusDomNode = false) {
   if (!g) return;
-  g.selectAll('.node').classed('kb-focus', d => activeKbNode && d.id === activeKbNode.id);
+  const nodes = g.selectAll('.node')
+    .classed('kb-focus', d => activeKbNode && d.id === activeKbNode.id)
+    .attr('tabindex', d => activeKbNode && d.id === activeKbNode.id ? 0 : -1);
+  if (focusDomNode && activeKbNode) {
+    const activeElement = nodes.filter(d => d.id === activeKbNode.id).node();
+    if (activeElement) activeElement.focus({ preventScroll: true });
+  }
 }
 
 // Klavye
@@ -483,6 +695,7 @@ document.getElementById('detail-panel').addEventListener('mouseleave', () => isD
 document.addEventListener('keydown', e => {
   const searchInput = document.getElementById('search-input');
   const isSearchFocused = document.activeElement === searchInput;
+  const targetElement = e.target instanceof Element ? e.target : null;
 
   if (e.key === 'Escape') {
     closePanel();
@@ -495,6 +708,11 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Enter') searchInput.blur();
     return;
   }
+
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  if (targetElement && targetElement.closest(
+    'button,a,input,textarea,select,summary,[contenteditable="true"],[role="separator"]'
+  )) return;
 
   if (isDetailHovered && !document.getElementById('detail-panel').classList.contains('closed')
     && ['ArrowUp', 'ArrowDown'].includes(e.key)) {
@@ -547,9 +765,8 @@ document.addEventListener('keydown', e => {
 
   if (layoutChanged) {
     update(activeKbNode);
-  } else {
-    g.selectAll('.node').classed('kb-focus', d => activeKbNode && d.id === activeKbNode.id);
   }
+  syncActiveNodeFocus(true);
 
   if (nodeChanged && activeKbNode.data.type === 'file') {
     if (!document.getElementById('detail-panel').classList.contains('closed')) {
@@ -568,8 +785,7 @@ async function showDetail(d, focusRequest = null) {
 
   const requestToken = ++detailRequestToken;
   const panel = document.getElementById('detail-panel');
-  panel.classList.remove('closed');
-  panel.setAttribute('aria-hidden', 'false');
+  setPanelOpen(panel, true);
 
   if (d.data.slug && window.location.hash.substring(1) !== d.data.slug) {
     history.replaceState(null, '', `#${d.data.slug}`);
@@ -597,15 +813,17 @@ async function showDetail(d, focusRequest = null) {
   document.getElementById('d-title').textContent = d.data.name;
   const body = document.getElementById('d-body');
 
-  if (mdCache.has(d.data.path)) {
-    renderMarkdown(mdCache.get(d.data.path), body, focusRequest);
-    return;
-  }
-
-  setPanelMessage(body, 'Yükleniyor...', 'detail-loading');
+  setPanelMessage(
+    body,
+    mdCache.has(d.data.path) ? 'İçerik hazırlanıyor...' : 'Yükleniyor...',
+    'detail-loading'
+  );
 
   try {
-    const text = await getMarkdown(d.data.path);
+    const [text] = await Promise.all([
+      getMarkdown(d.data.path),
+      ensureMarkdownLibraries()
+    ]);
     if (requestToken !== detailRequestToken) return;
     const entry = SEARCH_INDEX.get(d.id);
     if (entry) entry.content = text.replace(/[#*`>_\[\]]/g, '');
@@ -707,13 +925,14 @@ function clickBreadcrumb(id) {
 function closePanel(clearHash = true) {
   detailRequestToken += 1;
   const panel = document.getElementById('detail-panel');
-  panel.classList.add('closed');
-  panel.setAttribute('aria-hidden', 'true');
+  const shouldRestoreMapFocus = panel.contains(document.activeElement);
+  setPanelOpen(panel, false);
   if (clearHash && window.location.hash) {
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
   document.querySelectorAll('.active-snippet').forEach(element => element.classList.remove('active-snippet'));
   g && g.selectAll('.node').classed('kb-focus', false);
+  if (shouldRestoreMapFocus) syncActiveNodeFocus(true);
 }
 
 // ================================================================
@@ -731,6 +950,7 @@ function checkUrlHash() {
     window.setTimeout(() => focusAndOpen(target.id), 0);
   } else {
     console.warn(`Hash "${hash}" için node bulunamadı.`);
+    closePanel(false);
   }
 }
 
@@ -739,27 +959,50 @@ window.addEventListener('hashchange', checkUrlHash);
 // ================================================================
 // ZOOM KONTROLLERI
 // ================================================================
-document.getElementById('btn-zoom-in').addEventListener('click', () =>
-  svg.transition().duration(300).call(zoomBehavior.scaleBy, 1.2));
-document.getElementById('btn-zoom-out').addEventListener('click', () =>
-  svg.transition().duration(300).call(zoomBehavior.scaleBy, 0.8));
+function changeZoom(factor) {
+  if (!svg || !zoomBehavior) return;
+  const dur = motionDuration(300);
+  if (dur <= 0) svg.call(zoomBehavior.scaleBy, factor);
+  else svg.transition().duration(dur).call(zoomBehavior.scaleBy, factor);
+}
+
+function hasCollapsedNodes(node) {
+  if (!node) return false;
+  if (node._children && node._children.length) return true;
+  return (node.children || []).some(hasCollapsedNodes);
+}
+
+document.getElementById('btn-zoom-in').addEventListener('click', () => changeZoom(1.2));
+document.getElementById('btn-zoom-out').addEventListener('click', () => changeZoom(0.8));
 document.getElementById('btn-zoom-reset').addEventListener('click', resetMap);
 document.getElementById('btn-toggle-all').addEventListener('click', () => {
-  if (isAllExpanded) { root.children && root.children.forEach(collapse); isAllExpanded = false; }
-  else { expandAll(root); isAllExpanded = true; }
+  if (!root) return;
+  if (hasCollapsedNodes(root)) expandAll(root);
+  else {
+    root.children && root.children.forEach(collapse);
+    activeKbNode = root;
+  }
   update(root);
 });
-document.getElementById('btn-close-detail').addEventListener('click', closePanel);
+document.getElementById('btn-close-detail').addEventListener('click', () => {
+  closePanel();
+  syncActiveNodeFocus(true);
+});
 
 function resetMap() {
-  root && root.children && root.children.forEach(collapse);
+  if (!root || !svg || !zoomBehavior) return;
+  if (root && root._children) {
+    root.children = root._children;
+    root._children = null;
+  }
+  activeKbNode = root;
+  root.children && root.children.forEach(collapse);
   update(root, true);
   refreshViewportSize();
-  svg.transition().duration(500).call(
-    zoomBehavior.transform,
-    d3.zoomIdentity.translate(width / 4, height / 2).scale(0.9)
-  );
-  activeKbNode = root;
+  const targetTransform = d3.zoomIdentity.translate(width / 4, height / 2).scale(0.9);
+  const dur = motionDuration(500);
+  if (dur <= 0) svg.call(zoomBehavior.transform, targetTransform);
+  else svg.transition().duration(dur).call(zoomBehavior.transform, targetTransform);
   g && g.selectAll('.node').classed('kb-focus', false);
 }
 
@@ -886,9 +1129,10 @@ function focusSearchMatch(container, focusRequest) {
         0,
         targetTop - (container.clientHeight / 2) + (targetRect.height / 2)
       );
-      const reduceMotion = window.matchMedia
-        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      container.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+      container.scrollTo({
+        top,
+        behavior: reducedMotionQuery && reducedMotionQuery.matches ? 'auto' : 'smooth'
+      });
     });
   });
 
@@ -904,8 +1148,14 @@ searchInputElement.addEventListener('input', function () {
   searchTimeout = window.setTimeout(triggerSearch, 80);
 });
 
-document.getElementById('search-clear').addEventListener('click', clearSearch);
-document.getElementById('search-panel-close').addEventListener('click', clearSearch);
+document.getElementById('search-clear').addEventListener('click', () => {
+  clearSearch();
+  searchInputElement.focus();
+});
+document.getElementById('search-panel-close').addEventListener('click', () => {
+  clearSearch();
+  searchInputElement.focus();
+});
 
 async function warmSearchIndex() {
   if (searchWarmupDone) return;
@@ -920,6 +1170,7 @@ async function warmSearchIndex() {
 
   searchWarmupPromise = (async () => {
     const queue = [...pending];
+    let failed = false;
     const worker = async () => {
       while (queue.length) {
         const item = queue.shift();
@@ -927,12 +1178,15 @@ async function warmSearchIndex() {
           const text = await getMarkdown(item.entry.path);
           item.entry.content = text.replace(/[#*`>_\[\]]/g, '');
         } catch (error) {
+          failed = true;
           console.warn(`Arama fallback dosyası yüklenemedi: ${item.entry.path}`, error);
         }
       }
     };
     await Promise.all(Array.from({ length: Math.min(6, queue.length || 1) }, worker));
-    searchWarmupDone = true;
+    searchWarmupDone = !failed && Array.from(SEARCH_INDEX.values())
+      .filter(entry => entry.type === 'file')
+      .every(entry => entry.content !== null);
   })();
 
   try {
@@ -947,7 +1201,7 @@ async function ensureSearchReadyIfNeeded(panel, results) {
   await ensureSearchIndexRequested();
   if (searchWarmupDone) return;
 
-  panel.classList.remove('closed');
+  setPanelOpen(panel, true);
   document.getElementById('search-count').textContent = 'İndeks hazırlanıyor...';
   setPanelMessage(results, 'Not içerikleri ilk arama için hazırlanıyor...');
   await warmSearchIndex();
@@ -955,13 +1209,21 @@ async function ensureSearchReadyIfNeeded(panel, results) {
 
 function clearSearch() {
   searchRequestToken += 1;
+  const panel = document.getElementById('search-panel');
+  const shouldRestoreMapFocus = panel.contains(document.activeElement);
   document.getElementById('search-input').value = '';
   document.getElementById('search-clear').style.display = 'none';
-  document.getElementById('search-panel').classList.add('closed');
-  if (svg) {
-    svg.selectAll('.node').classed('search-match', false);
-    svg.selectAll('.link').classed('highlighted', false);
-  }
+  setPanelOpen(panel, false);
+  activeSearchMatchIds.clear();
+  activeSearchPathIds.clear();
+  syncSearchHighlights();
+  if (shouldRestoreMapFocus) syncActiveNodeFocus(true);
+}
+
+function syncSearchHighlights() {
+  if (!svg) return;
+  svg.selectAll('.node').classed('search-match', d => activeSearchMatchIds.has(d.id));
+  svg.selectAll('.link').classed('highlighted', d => activeSearchPathIds.has(d.id));
 }
 
 function collectSnippets(entry, term) {
@@ -1038,14 +1300,15 @@ async function triggerSearch() {
   const panel = document.getElementById('search-panel');
   const results = document.getElementById('search-results');
 
-  svg.selectAll('.node').classed('search-match', false);
-  svg.selectAll('.link').classed('highlighted', false);
+  activeSearchMatchIds.clear();
+  activeSearchPathIds.clear();
+  syncSearchHighlights();
 
   if (!term) {
-    panel.classList.add('closed');
+    setPanelOpen(panel, false);
     return;
   }
-  panel.classList.remove('closed');
+  setPanelOpen(panel, true);
 
   const requestToken = ++searchRequestToken;
   await ensureSearchReadyIfNeeded(panel, results);
@@ -1053,11 +1316,10 @@ async function triggerSearch() {
 
   const currentTerm = normalizeSearchText(input.value);
   if (!currentTerm) {
-    panel.classList.add('closed');
+    setPanelOpen(panel, false);
     return;
   }
 
-  let totalMatches = 0;
   const matchedNodes = [];
   const fragment = document.createDocumentFragment();
 
@@ -1067,40 +1329,23 @@ async function triggerSearch() {
     const snippets = collectSnippets(entry, currentTerm);
     if (!snippets.length) return;
 
-    totalMatches += snippets.length;
     matchedNodes.push(node);
     fragment.appendChild(createSearchResultGroup(node, snippets, currentTerm, results));
   });
 
-  document.getElementById('search-count').textContent = `${totalMatches} Sonuç`;
+  document.getElementById('search-count').textContent = `${matchedNodes.length} İçerik`;
   if (fragment.childNodes.length) results.replaceChildren(fragment);
   else setPanelMessage(results, 'Sonuç bulunamadı.');
 
-  if (matchedNodes.length > 0) {
-    matchedNodes.forEach(targetNode => {
-      let parent = targetNode;
-      while (parent.parent) {
-        if (parent.parent._children) {
-          parent.parent.children = parent.parent._children;
-          parent.parent._children = null;
-        }
-        parent = parent.parent;
-      }
-    });
-    update(root, true);
-    window.setTimeout(() => {
-      matchedNodes.forEach(targetNode => {
-        svg.selectAll('.node').filter(node => node.id === targetNode.id).classed('search-match', true);
-        let current = targetNode;
-        while (current.parent) {
-          svg.selectAll('.link')
-            .filter(link => link && link.target && link.target.id === current.id)
-            .classed('highlighted', true);
-          current = current.parent;
-        }
-      });
-    }, 60);
-  }
+  matchedNodes.forEach(targetNode => {
+    activeSearchMatchIds.add(targetNode.id);
+    let current = targetNode;
+    while (current.parent) {
+      activeSearchPathIds.add(current.id);
+      current = current.parent;
+    }
+  });
+  syncSearchHighlights();
 }
 
 function focusAndOpen(id, focusRequest = null) {
@@ -1133,32 +1378,135 @@ function focusAndOpen(id, focusRequest = null) {
 // ================================================================
 // PANEL RESIZE
 // ================================================================
-let isResizingLeft = false, isResizingRight = false;
+function panelResizeBounds(side) {
+  const minimum = side === 'left' ? 200 : 300;
+  const preferredMaximum = side === 'left' ? window.innerWidth / 2 : window.innerWidth * 0.7;
+  return { minimum, maximum: Math.max(minimum, preferredMaximum) };
+}
 
-document.getElementById('rsz-left').addEventListener('mousedown', e => {
-  isResizingLeft = true; document.body.classList.add('resizing'); e.preventDefault();
-});
-document.getElementById('rsz-right').addEventListener('mousedown', e => {
-  isResizingRight = true; document.body.classList.add('resizing'); e.preventDefault();
-});
+function scheduleViewportRecenter(delay = 120) {
+  if (viewportResizeTimeout !== null) window.clearTimeout(viewportResizeTimeout);
+  viewportResizeTimeout = window.setTimeout(() => {
+    viewportResizeTimeout = null;
+    if (activeKbNode && svg && svg.node() && !isResizingLeft && !isResizingRight) {
+      const currentScale = d3.zoomTransform(svg.node()).k;
+      panToNode(activeKbNode, currentScale, 0);
+    }
+  }, delay);
+}
 
-document.addEventListener('mousemove', e => {
+function applyPendingPanelResize() {
+  resizeAnimationFrame = null;
+  if (pendingResizeClientX === null) return;
+  const clientX = pendingResizeClientX;
+  pendingResizeClientX = null;
   if (isResizingLeft) {
-    let w = Math.max(200, Math.min(window.innerWidth / 2, e.clientX));
+    const { minimum, maximum } = panelResizeBounds('left');
+    const w = Math.max(minimum, Math.min(maximum, clientX));
     document.documentElement.style.setProperty('--search-width', w + 'px');
+    updateResizerAria('left', w);
   }
   if (isResizingRight) {
-    let w = Math.max(300, Math.min(window.innerWidth * 0.7, window.innerWidth - e.clientX));
+    const { minimum, maximum } = panelResizeBounds('right');
+    const w = Math.max(minimum, Math.min(maximum, window.innerWidth - clientX));
     document.documentElement.style.setProperty('--detail-width', w + 'px');
+    updateResizerAria('right', w);
   }
-});
+}
 
-document.addEventListener('mouseup', () => {
-  if (isResizingLeft || isResizingRight) {
-    isResizingLeft = isResizingRight = false;
-    document.body.classList.remove('resizing');
+function updateResizerAria(side, widthValue) {
+  const resizer = document.getElementById(side === 'left' ? 'rsz-left' : 'rsz-right');
+  const { minimum, maximum } = panelResizeBounds(side);
+  resizer.setAttribute('aria-valuemin', String(Math.round(minimum)));
+  resizer.setAttribute('aria-valuenow', String(Math.round(widthValue)));
+  resizer.setAttribute('aria-valuemax', String(Math.round(maximum)));
+}
+
+function syncPanelResizeAccessibility() {
+  ['left', 'right'].forEach(side => {
+    const panel = document.getElementById(side === 'left' ? 'search-panel' : 'detail-panel');
+    const property = side === 'left' ? '--search-width' : '--detail-width';
+    const { minimum, maximum } = panelResizeBounds(side);
+    const currentWidth = panel.getBoundingClientRect().width;
+    const widthValue = Math.max(minimum, Math.min(maximum, currentWidth));
+    if (Math.abs(currentWidth - widthValue) > 0.5) {
+      document.documentElement.style.setProperty(property, widthValue + 'px');
+    }
+    updateResizerAria(side, widthValue);
+  });
+}
+
+function resizePanelFromKeyboard(side, event) {
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+  const panel = document.getElementById(side === 'left' ? 'search-panel' : 'detail-panel');
+  const currentWidth = panel.getBoundingClientRect().width;
+  const direction = event.key === 'ArrowRight' ? 1 : -1;
+  const requestedWidth = side === 'left'
+    ? currentWidth + direction * 20
+    : currentWidth - direction * 20;
+  const { minimum, maximum } = panelResizeBounds(side);
+  const widthValue = Math.max(minimum, Math.min(maximum, requestedWidth));
+  document.documentElement.style.setProperty(
+    side === 'left' ? '--search-width' : '--detail-width',
+    widthValue + 'px'
+  );
+  updateResizerAria(side, widthValue);
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+function handlePanelResizeMove(event) {
+  pendingResizeClientX = event.clientX;
+  if (resizeAnimationFrame === null) {
+    resizeAnimationFrame = window.requestAnimationFrame(applyPendingPanelResize);
   }
+}
+
+function stopPanelResize() {
+  if (!isResizingLeft && !isResizingRight) return;
+  if (resizeAnimationFrame !== null) {
+    window.cancelAnimationFrame(resizeAnimationFrame);
+    applyPendingPanelResize();
+  }
+  isResizingLeft = false;
+  isResizingRight = false;
+  document.body.classList.remove('resizing');
+  document.removeEventListener('pointermove', handlePanelResizeMove);
+  document.removeEventListener('pointerup', stopPanelResize);
+  document.removeEventListener('pointercancel', stopPanelResize);
+  refreshViewportSize();
+  scheduleViewportRecenter(0);
+}
+
+function startPanelResize(side, event) {
+  if (event.button !== 0) return;
+  isResizingLeft = side === 'left';
+  isResizingRight = side === 'right';
+  pendingResizeClientX = event.clientX;
+  document.body.classList.add('resizing');
+  document.addEventListener('pointermove', handlePanelResizeMove);
+  document.addEventListener('pointerup', stopPanelResize);
+  document.addEventListener('pointercancel', stopPanelResize);
+  if (event.currentTarget.setPointerCapture) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+  event.preventDefault();
+}
+
+document.getElementById('rsz-left').addEventListener('pointerdown', event => {
+  startPanelResize('left', event);
 });
+document.getElementById('rsz-right').addEventListener('pointerdown', event => {
+  startPanelResize('right', event);
+});
+document.getElementById('rsz-left').addEventListener('keydown', event => {
+  resizePanelFromKeyboard('left', event);
+});
+document.getElementById('rsz-right').addEventListener('keydown', event => {
+  resizePanelFromKeyboard('right', event);
+});
+window.addEventListener('blur', stopPanelResize);
+syncPanelResizeAccessibility();
 
 // ================================================================
 // BAŞLAT

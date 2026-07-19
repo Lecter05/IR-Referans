@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>IR Bilgi Tabanı</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -15,11 +16,8 @@
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<script src="analytics.js"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8B0KKMF7YB"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/marked@18.0.6/lib/marked.umd.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js" crossorigin="anonymous"></script>
+<script defer src="analytics.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
 <script defer src="app.js"></script>
 
 </head>
@@ -36,7 +34,7 @@
     <div class="header-title">IR Bilgi Tabanı</div>
     <div class="search-wrapper">
       <span class="search-icon-deco">🔍</span>
-      <input type="search" id="search-input" placeholder="Ara..." aria-label="Bilgi tabanında ara" autocomplete="off" spellcheck="false">
+      <input type="search" id="search-input" placeholder="Ara..." aria-label="Bilgi tabanında ara" autocomplete="off" spellcheck="false" disabled>
       <button type="button" class="action-btn" id="search-clear" title="Aramayı Temizle" aria-label="Aramayı temizle">✕</button>
     </div>
   </div>
@@ -47,10 +45,10 @@
   </div>
 </header>
 
-<div class="main">
+<main class="main">
   <!-- SOL PANEL -->
-  <div id="search-panel" class="closed">
-    <div class="resizer resizer-left" id="rsz-left"></div>
+  <div id="search-panel" class="closed" aria-hidden="true" inert>
+    <div class="resizer resizer-left" id="rsz-left" role="separator" tabindex="0" aria-label="Arama paneli genişliği" aria-orientation="vertical" aria-controls="search-panel" aria-valuemin="200" aria-valuemax="1000" aria-valuenow="320"></div>
     <div class="search-panel-header">
       <div class="search-panel-info">
         <span>Arama Sonuçları</span>
@@ -63,10 +61,10 @@
 
   <!-- ZOOM -->
   <div class="zoom-controls">
-    <button type="button" class="zoom-btn" id="btn-zoom-in" title="Yakınlaştır" aria-label="Haritayı yakınlaştır">+</button>
-    <button type="button" class="zoom-btn" id="btn-zoom-out" title="Uzaklaştır" aria-label="Haritayı uzaklaştır">-</button>
-    <button type="button" class="zoom-btn" id="btn-zoom-reset" title="Sıfırla" aria-label="Harita görünümünü sıfırla">⌂</button>
-    <button type="button" class="zoom-btn" id="btn-toggle-all" title="Tümünü Aç/Kapat" aria-label="Tüm düğümleri aç veya kapat">↕</button>
+    <button type="button" class="zoom-btn" id="btn-zoom-in" title="Yakınlaştır" aria-label="Haritayı yakınlaştır" disabled>+</button>
+    <button type="button" class="zoom-btn" id="btn-zoom-out" title="Uzaklaştır" aria-label="Haritayı uzaklaştır" disabled>-</button>
+    <button type="button" class="zoom-btn" id="btn-zoom-reset" title="Sıfırla" aria-label="Harita görünümünü sıfırla" disabled>⌂</button>
+    <button type="button" class="zoom-btn" id="btn-toggle-all" title="Tümünü Aç/Kapat" aria-label="Tüm düğümleri aç veya kapat" disabled>↕</button>
   </div>
 
   <!-- MİNDMAP -->
@@ -79,8 +77,8 @@
   </div>
 
   <!-- SAĞ PANEL -->
-  <div id="detail-panel" class="closed" aria-hidden="true">
-    <div class="resizer resizer-right" id="rsz-right"></div>
+  <div id="detail-panel" class="closed" aria-hidden="true" inert>
+    <div class="resizer resizer-right" id="rsz-right" role="separator" tabindex="0" aria-label="İçerik paneli genişliği" aria-orientation="vertical" aria-controls="detail-panel" aria-valuemin="300" aria-valuemax="1400" aria-valuenow="450"></div>
     <div class="detail-header">
       <div class="breadcrumb" id="d-bc">Ana Sayfa</div>
       <h2 id="d-title">İçerik</h2>
@@ -88,7 +86,7 @@
     </div>
     <div class="detail-body" id="d-body"></div>
   </div>
-</div>
+</main>
 
 </body>
 </html>
